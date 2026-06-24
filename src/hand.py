@@ -1,6 +1,10 @@
+#Imports
 from collections import Counter
 from src.card import Card
 
+
+
+#Hand class
 class Hand:
     #Creates a hand of 5 cards drawn from the deck
     def __init__(self, deck):
@@ -9,13 +13,19 @@ class Hand:
         for i in range(5):
             self._cards.append(deck.cards.pop())
 
+
+
     #Draws a card from the deck
     def draw(self, deck):
         self._cards.append(deck.cards.pop())
 
+
+
     #Picks up a card from the discard pile
     def pickup(self, discard):
         self._cards.append(discard.cards.pop())
+
+
 
     #Returns the total numbers of points in the hand
     def points(self):
@@ -23,7 +33,9 @@ class Hand:
         for card in self._cards:
             total += card.value()
         return total
-        
+
+
+
     #Asks the player to select cards from their hand to drop
     #Returns a list of Card objects (selected cards)
     def select(self, selected_cards):
@@ -41,6 +53,8 @@ class Hand:
         #Returns a list of Card objects (selected cards)
         return selected_cards
     
+
+
     #Drops all the cards from the selected_cards list
     #Adds all dropped cards to discard pile
     def drop(self, discard, selected_cards):
@@ -48,12 +62,14 @@ class Hand:
             self._cards.remove(selected_cards[i])
             discard.cards.append(selected_cards[i])
     
+
+
     #If player/computer thinks they have the lowest number of points, they can declare their hand
     #If successful, the player/computer that declared gets 0 points while the other player/computer 
-    #       gets the combined total of their hand
+    #   gets the combined total of their hand
     #If unsuccessful (same number of points or greater than other player/computer), the player/computer 
-    #       that declared gets the total of their hand and the other player/computer's hand. The other 
-    #       player/computer gets -10 points
+    #   that declared gets the total of their hand and the other player/computer's hand. The other 
+    #   player/computer gets -10 points
     def declare(self, other):
         if self.points() < other.points():
             other.score += other.points()
@@ -62,19 +78,28 @@ class Hand:
             self._score += self.points()
             self._score += other.points()
 
-    #Returns the hand
+
+
+    #Allows cards attribute to be accessed outside of this class
     @property
     def cards(self):
         return self._cards
     
-    #Returns the current score for the player/computer
+
+
+    #Allows score attribute to be accessed outside of this class
     @property
     def score(self):
         return self._score
     
+
+
+    #Allows score attribute to be set outside of this class
     @score.setter
     def score(self, score):
         self._score = score
+
+
 
     #----------Computer-Specific Methods----------
     #Returns how many pairs of duplicates exist in a hand
@@ -89,6 +114,8 @@ class Hand:
                 duplicates.append(rank)
         return len(duplicates)
     
+
+
     #Returns the highest value Card object in the hand
     def high_card(self, discard):
         #Placeholder so Card objects are compared
@@ -102,8 +129,11 @@ class Hand:
 
             if card.value() > max.value():
                 max = card
+
         return max
     
+
+
     #Finds the highest value duplicate if multiple of them exist in the hand
     #Returns a list of Card objects (best_duplicate)
     def highest_value_duplicate(self, discard):
@@ -165,6 +195,8 @@ class Hand:
         #Returns a list of Card objects (best_duplicate)
         return best_duplicate
     
+
+
     #Compares the best duplicate in the hand with the high card to see which one has a greater total value
     #Returns a list of Card objects (the best option to drop on the next turn)
     def compare(self, duplicates, high_card):
@@ -177,26 +209,34 @@ class Hand:
             cards_to_drop.append(high_card)
             return cards_to_drop
 
+        #Gets the total value for all the duplicates added up
         duplicate_value = len(duplicates) * duplicates[0].value()
 
+        #Compares between the 2 to see which one has a higher value and return those cards
         if duplicate_value < high_card.value():
             cards_to_drop.append(high_card)
             return cards_to_drop
         else:
             return duplicates
-        
+
+
+
     #Checks to see if picking up the top card of the discard pile creates or adds to a duplicate in the hand
     #If it does, returns true; otherwise, returns false
     def pickup_creates_duplicate(self, discard):
+        #Gets the high card in the hand and the value of the top card of the discard pile
         high_card = self.high_card(discard)
-        
         total = discard.top().value()
+
+        #Checks all cards to see if they match the top card of the discard pile
+        #If so, card's value is added to total and matching is incremented
         matching = 0
         for card in self._cards:
             if card.rank == discard.top().rank:
                 total += card.value()
                 matching += 1
         
+        #Checks if there are any matching cards and if the total value of the matching cards is greater than the high card's value or not
         if matching > 0:
             if total >= high_card.value():
                 return True

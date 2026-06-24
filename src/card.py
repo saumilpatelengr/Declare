@@ -24,14 +24,14 @@ class Card:
 
 
 
-    #Returns the card's rank
+    #Allows rank attribute to be accessed outside of this class
     @property
     def rank(self):
         return self._rank
     
 
     
-    #Returns the card's suit
+    #Allows suit attribute to be accessed outside of this class
     @property
     def suit(self):
         return self._suit
