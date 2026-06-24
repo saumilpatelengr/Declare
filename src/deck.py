@@ -1,6 +1,10 @@
+#Imports
 import random
 from src.card import Card
 
+
+
+#Deck class
 class Deck:
     #Creates a standard deck of 52 playing cards using Card objects
     def __init__(self):
@@ -12,13 +16,19 @@ class Deck:
                 self._cards.append(Card(suit, rank))
         self.shuffle()
 
+
+
     #Shuffles the deck
     def shuffle(self):
         random.shuffle(self._cards)
 
+
+
     #Returns the numbers of cards in the deck
     def size(self):
         return len(self._cards)
+    
+
     
     #Returns the deck
     @property
