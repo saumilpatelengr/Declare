@@ -1,6 +1,6 @@
 #Imports
 import random
-from src.card import Card
+from card import Card
 
 
 

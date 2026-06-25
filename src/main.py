@@ -1,10 +1,10 @@
 import pygame
 import os
 import random
-from src.button_sprite import ButtonSprite
-from src.card_sprite import CardSprite
-from src.game import Game
-from src.save import write_value, read_value
+from button_sprite import ButtonSprite
+from card_sprite import CardSprite
+from game import Game
+from save import write_value, read_value
 
 pygame.init()
 SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -19,7 +19,7 @@ VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 1920, 1080
 GAME_SCREEN = pygame.Surface((VIRTUAL_WIDTH, VIRTUAL_HEIGHT))
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-icon_path = os.path.join(script_dir, 'assets', 'images', 'icons', 'icon.png')
+icon_path = os.path.join(script_dir, '..', 'assets', 'images', 'icons', 'icon.png')
 icon = pygame.image.load(icon_path)
 pygame.display.set_icon(icon)
 
@@ -148,7 +148,7 @@ def create_menu_buttons(button_sprite):
 
 def create_background():
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    background_path = os.path.join(script_dir, 'assets', 'images', 'ui', 'background.png')
+    background_path = os.path.join(script_dir, '..', 'assets', 'images', 'ui', 'background.png')
     background_image = pygame.image.load(background_path).convert_alpha()
     background_image = pygame.transform.scale(background_image, (VIRTUAL_WIDTH, VIRTUAL_HEIGHT))
     
@@ -156,7 +156,7 @@ def create_background():
 
 def create_title():
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    title_path = os.path.join(script_dir, 'assets', 'images', 'ui', 'title.png')
+    title_path = os.path.join(script_dir, '..', 'assets', 'images', 'ui', 'title.png')
     title_image = pygame.image.load(title_path).convert_alpha()
 
     title_rect = title_image.get_rect()
@@ -166,7 +166,7 @@ def create_title():
 
 def create_box(X, Y, scale):
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    box_path = os.path.join(script_dir, 'assets', 'images', 'ui', 'box.png')
+    box_path = os.path.join(script_dir, '..', 'assets', 'images', 'ui', 'box.png')
     box_image = pygame.image.load(box_path).convert_alpha()
     box_image = pygame.transform.scale_by(box_image, scale)
 
@@ -177,7 +177,7 @@ def create_box(X, Y, scale):
 
 def create_fonts():
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    font_path = os.path.join(script_dir, 'assets', 'fonts', 'Handjet', 'static', 'Handjet-Regular.ttf')
+    font_path = os.path.join(script_dir, '..', 'assets', 'fonts', 'Handjet', 'static', 'Handjet-Regular.ttf')
     small_font = pygame.font.Font(font_path, 25)
     large_font = pygame.font.Font(font_path, 50)
 
@@ -197,7 +197,7 @@ def create_rules(font):
     create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.75)
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(script_dir, 'src', 'rules.txt')
+    file_path = os.path.join(script_dir, 'rules.txt')
     with open(file_path, "r", encoding = "utf-8") as file:
         rules = file.read()
     text = font.render(rules, True, (0, 0, 0))
@@ -212,7 +212,7 @@ def virtual_mouse():
 
 def play_sound(name, SOUND, MUSIC, volume = 1.0):
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(script_dir, 'assets', 'audio', f'{name}.mp3')
+    path = os.path.join(script_dir, '..', 'assets', 'audio', f'{name}.mp3')
     if name == 'music':
         pygame.mixer.music.load(path)
         pygame.mixer.music.play(-1)
@@ -227,7 +227,7 @@ def create_credits(font):
     create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.6)
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(script_dir, 'src', 'credits.txt')
+    file_path = os.path.join(script_dir, 'credits.txt')
     with open(file_path, "r", encoding = "utf-8") as file:
         credits = file.read()
     text = font.render(credits, True, (0, 0, 0))

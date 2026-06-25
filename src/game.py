@@ -1,7 +1,7 @@
 #Imports
-from src.deck import Deck
-from src.discard import Discard
-from src.hand import Hand
+from deck import Deck
+from discard import Discard
+from hand import Hand
 
 
 
