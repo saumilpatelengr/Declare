@@ -11,7 +11,7 @@ class Game:
     def __init__(self):
         #Creates all the objects needed to play the game
         self._deck = Deck()
-        self._discard = Discard(self._deck)
+        self._discard = Discard()
         self._player = Hand(self._deck)
         self._computer = Hand(self._deck)
 
