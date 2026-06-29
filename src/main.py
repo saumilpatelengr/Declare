@@ -345,16 +345,28 @@ def create_credits(font):
 
 
 
+#Controls the different screens in the game and allows the user to switch between them
 def main():
+    #Initial state to show the menu screen first
     state = "menu"
-    running = True
+
+    #Reads the highscore for the user (0 if no value exists)
     highscore = read_value('highscore', 0)
+
+    #Creates the small and large fonts
     large_font, small_font = create_fonts()
+
+    #Reads the values for SOUND and MUSIC to see if they are muted or not (both are not muted if no values exist)
     SOUND = read_value('sound', True)
     MUSIC = read_value('music', True)
+
+    #Starts playing the music for the game
     play_audio('music', SOUND, MUSIC)
 
-    while running:
+    #Loop controls the different screens the user can access using return values
+    #The loop breaks once the user presses the 'QUIT' button
+    run = True
+    while run:
         if state == "menu":
             state = menu(large_font, SOUND, MUSIC)
         elif state == 'rules':
@@ -366,18 +378,29 @@ def main():
         elif state == "credits":
             state = credits(small_font, SOUND, MUSIC)
         elif state == "quit":
-            running = False
+            run = False
 
+    #Writes the values for SOUND and MUSIC in case the user muted either of them
     write_value('sound', SOUND)
     write_value('music', MUSIC)
+
+    #Quits the Pygame
     pygame.quit()
 
-def menu(large_font, SOUND, MUSIC):
-    clock = pygame.time.Clock()
-    run = True
 
+
+#Runs the menu screen for the game
+def menu(large_font, SOUND, MUSIC):
+    #Used to control the FPS of the game
+    clock = pygame.time.Clock()
+
+    #Creates a sprite group for all the buttons on the menu screen
     button_sprite = pygame.sprite.Group()
 
+    #Loop controls mouse click events on buttons
+    #Plays a sound effect when a button is clicked
+    #Depending on the button that is clicked, a different value is returned to change between screens
+    run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -399,37 +422,53 @@ def menu(large_font, SOUND, MUSIC):
                         play_audio('button', SOUND, MUSIC)
                         return 'quit'
 
-
-
+        #Creates and draws the background, title, and buttons for the menu screen
         create_background()
         create_title()
         create_menu_buttons(button_sprite)
         button_sprite.draw(GAME_SCREEN)
+
+        #The current highscore for the user is also displayed
         print_highscore(large_font)
 
+        #Scales everything on screen to the computer's screen size
         render_to_screen()
+
+        #Refreshes the display window
         pygame.display.update()
+
+        #Caps the game's FPS to whatever the 'FPS' variable is equal to
         clock.tick(FPS)
             
+
+
+#Runs the actual game for the user to play
 def game(highscore, large_font, small_font, SOUND, MUSIC):
+    #Used to control the FPS of the game
     clock = pygame.time.Clock()
-    run = True
+
+    #Creates a Game object that represents a single round being played
     game = Game()
+
+    #Holds the cards that the user wants to drop during their turn
     selected_cards = []
+
+    #Initializes the start time used to measure a duration of time
     start_time = 0
+
+    #Sets both the player's and computer's overall score to 0
     overall_player_score = 0
     overall_computer_score = 0
 
-
-
+    #Creates sprite groups for buttons, the deck, the player, the computer, and the discard pile
     button_sprite = pygame.sprite.Group()
     deck_sprite = pygame.sprite.Group()
     player_sprite = pygame.sprite.Group()
     computer_sprite = pygame.sprite.Group()
     discard_sprite = pygame.sprite.Group()
 
-
-
+    #Loop controls the flow of an entire game
+    run = True
     while run:
         current_time = pygame.time.get_ticks()
         for event in pygame.event.get():
@@ -653,5 +692,8 @@ def options(SOUND, MUSIC):
         pygame.display.update()
         clock.tick(FPS)
 
+
+
+#Main function is run
 if __name__ == "__main__":
     main()
