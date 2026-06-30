@@ -641,14 +641,20 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
 
 
 
+#Runs the rules screen for the game
 def rules(small_font, SOUND, MUSIC):
+    #Used to control the FPS of the game
     clock = pygame.time.Clock()
-    run = True
 
+    #Creates a sprite group that can hold a single sprite; creates the back button and adds it to the sprite group
     button_sprite = pygame.sprite.GroupSingle()
     back_button = ButtonSprite(100, 970, 'back')
     button_sprite.add(back_button)
 
+    #Loop controls mouse click events on the back button
+    #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
+    #Plays a sound effect when the button is clicked
+    run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -658,24 +664,36 @@ def rules(small_font, SOUND, MUSIC):
                         play_audio('button', SOUND, MUSIC)
                         return 'menu'
 
+        #Creates and draws the background, back button, and rules box onto the screen
         create_background()
         button_sprite.draw(GAME_SCREEN)
         create_rules(small_font)
 
+        #Scales everything on screen to the computer's screen size
         render_to_screen()
+
+        #Refreshes the display window
         pygame.display.update()
+
+        #Caps the game's FPS to whatever the 'FPS' variable is equal to
         clock.tick(FPS)
 
 
 
+#Runs the credits screen for the game
 def credits(small_font, SOUND, MUSIC):
+    #Used to control the FPS of the game
     clock = pygame.time.Clock()
-    run = True
 
+    #Creates a sprite group that can hold a single sprite; creates the back button and adds it to the sprite group
     button_sprite = pygame.sprite.GroupSingle()
     back_button = ButtonSprite(100, 970, 'back')
     button_sprite.add(back_button)
 
+    #Loop controls mouse click events on the back button
+    #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
+    #Plays a sound effect when the button is clicked
+    run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -685,42 +703,66 @@ def credits(small_font, SOUND, MUSIC):
                         play_audio('button', SOUND, MUSIC)
                         return 'menu'
 
+        #Creates and draws the background, back button, and credits box onto the screen
         create_background()
         button_sprite.draw(GAME_SCREEN)
         create_credits(small_font)
 
+        #Scales everything on screen to the computer's screen size
         render_to_screen()
+
+        #Refreshes the display window
         pygame.display.update()
+
+        #Caps the game's FPS to whatever the 'FPS' variable is equal to
         clock.tick(FPS)
 
 
 
+#Runs the options screen for the game
 def options(SOUND, MUSIC):
+    #Used to control the FPS of the game
     clock = pygame.time.Clock()
-    run = True
 
+    #Creates a sprite group that can hold a single sprite; creates the back button and adds it to the sprite group
     button_sprite = pygame.sprite.Group()
     back_button = ButtonSprite(100, 970, 'back')
     button_sprite.add(back_button)
+
+    #If SOUND is True, then draws the 'ON' version of the sound button onto the screen (all sound effects will play in the game)
+    #Otherwise, it will draw the 'OFF' version of the sound button onto the screen (all sound effects are muted in the game)
     if SOUND:
         sound_button = ButtonSprite((VIRTUAL_WIDTH / 2) - 150, VIRTUAL_HEIGHT / 2, 'sound', 0.75, False)
     else:
         sound_button = ButtonSprite((VIRTUAL_WIDTH / 2) - 150, VIRTUAL_HEIGHT / 2, 'sound', 0.75, True)
     button_sprite.add(sound_button)
+
+    #If MUSIC is True, then draws the 'ON' version of the music button onto the screen (music will play in the game)
+    #Otherwise, it will draw the 'OFF' version of the music button onto the screen (music will be muted in the game)
     if MUSIC:
         music_button = ButtonSprite((VIRTUAL_WIDTH / 2) + 150, VIRTUAL_HEIGHT / 2, 'music', 0.75, False)
     else:
         music_button = ButtonSprite((VIRTUAL_WIDTH / 2) + 150, VIRTUAL_HEIGHT / 2, 'music', 0.75, True)
     button_sprite.add(music_button)
 
+    #Loop controls mouse click events on buttons
+    #Plays a sound effect when a button is clicked
+    run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = virtual_mouse()
                 for sprite in button_sprite:
+                    #If the back button is clicked, it will return 'menu' to change to the menu screen and will return
+                    #   both SOUND and MUSIC to ensure user preferences are saved (if either are muted or not)
                     if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'back':
                         play_audio('button', SOUND, MUSIC)
                         return 'menu', SOUND, MUSIC
+                    #If the music button is clicked, it will change if the button was clicked or not (button not being
+                    #   clicked means that music is 'ON' and it being clicked means that music is 'OFF')
+                    #If the click attribute changes to True, then it will change MUSIC to False and pause all music in
+                    #   the game
+                    #Otherwise, it will change MUSIC to True and unpause all music in the game
                     elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'music':
                         play_audio('button', SOUND, MUSIC)
                         sprite.mute()
@@ -730,6 +772,12 @@ def options(SOUND, MUSIC):
                         else:
                             MUSIC = True
                             pygame.mixer.music.unpause()
+                    #If the sound button is clicked, it will change if the button was clicked or not (button not being 
+                    #   clicked means that sound is 'ON' and it being clicked means that sound is 'OFF')
+                    #If the click attribute changes to True, then it will change SOUND to False and any sound effects in
+                    #   the game will not play when objects are interacted with
+                    #Otherwise, it will change SOUND to True and any sound effects in the game will play when objects are
+                    #   interacted with
                     elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'sound':
                         play_audio('button', SOUND, MUSIC)
                         sprite.mute()
@@ -738,12 +786,18 @@ def options(SOUND, MUSIC):
                         else:
                             SOUND = True
                         
+        #Creates and draws the background, box, and buttons onto the screen
         create_background()
         create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.0)
         button_sprite.draw(GAME_SCREEN)
 
+        #Scales everything on screen to the computer's screen size
         render_to_screen()
+
+        #Refreshes the display window
         pygame.display.update()
+
+        #Caps the game's FPS to whatever the 'FPS' variable is equal to
         clock.tick(FPS)
 
 
