@@ -470,29 +470,48 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
     #Loop controls the flow of an entire game
     run = True
     while run:
+        #Stores how many milliseconds passed since Pygame was initialized
         current_time = pygame.time.get_ticks()
+
+        #Checks for any events
         for event in pygame.event.get():
+            #Mouse for GAME_SCREEN is created
             mouse_x, mouse_y = virtual_mouse()
+
+            #If the mouse is over a card in the player's hand, it will enlarge the card the mouse is over
             for sprite in player_sprite:
                 if sprite.rect.collidepoint(mouse_x, mouse_y):
                     sprite.hovering(True)
                 else:
                     sprite.hovering(False)
 
+            #Looking for mouse clicks
             if event.type == pygame.MOUSEBUTTONDOWN:
+                #Player's turn
                 if game.phase == 'Phase_Player':
+                    #If the player clicks on the 'DECLARE' button during their turn, then points are counted up for the round
+                    #Plays a sound effect when the button is clicked
+                    #Changes phase to 'Phase_Declare' to handle the round's results
                     for sprite in button_sprite:
                         if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'declare':
                             play_audio('button', SOUND, MUSIC)
                             game.player_declare()
                             game.phase = 'Phase_Declare'
                             break
-                        
+
+                    #If the player clicks on any cards in their hand, they will be 'selected' and will move up slightly
+                    #Plays a sound effect when a card is clicked
                     for sprite in player_sprite:
                         if sprite.rect.collidepoint(mouse_x, mouse_y):
                             play_audio('card', SOUND, MUSIC)
                             sprite.update_on_click(selected_cards)
 
+                    #If the player clicks on the deck, the cards selected by the player will be checked to see if they are valid to drop
+                    #Valid to drop means that at least 1 card is selected and all selected cards are of the same rank
+                    #If not valid, all cards in the player's hand will be reset to their original positions and selected_cards is emptied
+                    #If valid, the player draws a card, drops all selected cards, selected_cards is emptied, and its now the computer's turn.
+                    #   start_time is set to current_time and will be used to ensure that the computer takes only 1 second to take its turn
+                    #Plays a sound effect when cards are reset or when a card is drawn
                     for sprite in deck_sprite:
                         if sprite.rect.collidepoint(mouse_x, mouse_y):
                             chosen_cards = game.player_select_cards(selected_cards)
@@ -510,12 +529,20 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
                                 start_time = current_time
                                 break
                     
+                    #If the player clicks on the discard pile, the cards selected by the player will be checked to see if they are valid to drop
+                    #Valid to drop means that at least 1 card is selected and all selected cards are of the same rank
+                    #If not valid, all cards in the player's hand will be reset to their original positions and selected_cards is emptied
+                    #If valid, the player will pickup the top card of the discard pile, drop all selected cards, selected_cards is emptied, and
+                    #   its now the computer's turn. start_time is set to current_time and will be used to ensure that the computer takes only 
+                    #   1 second to take its turn
+                    #Plays a sound effect when cards are reset or when a card is picked up from the discard pile
                     for sprite in discard_sprite:
                         if sprite.rect.collidepoint(mouse_x, mouse_y):
                             chosen_cards = game.player_select_cards(selected_cards)
                             if chosen_cards == None:
                                 for sprite in player_sprite:
                                     sprite.revert(PLAYER_Y)
+                                play_audio('card', SOUND, MUSIC, 0.2)
                                 selected_cards.clear()
                             else:   
                                 game.player_pickup()
@@ -526,27 +553,37 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
                                 start_time = current_time
                                 break
 
-
-
+                #If either the player or computer declare during their turn
                 elif game.phase == 'Phase_Declare':
+                    #If the player clicks on any buttons in the score box
                     for sprite in button_sprite:
+                        #If the player clicks the 'MENU' button, then the user will be redirected to the menu screen
+                        #Plays a sound effect when the button is clicked
                         if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'menu':
                             play_audio('button', SOUND, MUSIC)
                             return 'menu'
 
+                        #If the player clicks the 'PLAY' button, button_sprite is emptied to remove the 'MENU' and 'PLAY' buttons
+                        #   from the screen. The overall scores for both the computer and player are updated, selected_cards is emptied,
+                        #   and a new Game object is created to start another round of the game
+                        #Plays a sound effect when the button is clicked
                         elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'play':
                             play_audio('button', SOUND, MUSIC, 0.2)
                             button_sprite.empty()
-
                             overall_computer_score, overall_player_score = update_scores(game, overall_computer_score, overall_player_score)
-
                             selected_cards.clear()
                             game = Game()
 
-
-
+        #Computer's turn
+        #'current_time - start_time >= 1000' ensures that the computer's turn takes 1 second to complete
         if game.phase == 'Phase_Computer' and current_time - start_time >= 1000:
+            #Picks a random number between 10-15 inclusive to create a sense of randomness in the computer's decision
             number = random.randint(10, 15)
+
+            #If the total number of points in the computer's hand is less than or equal to the random number, it will declare
+            #   and change the phase to 'Phase_Declare'
+            #Otherwise, the computer will take its turn and change the phase to 'Phase_Player' once it is done
+            #Plays a sound effect after the computer draws/picks up a card
             if game.computer.points() <= number:
                 game.computer.declare(game.player)
                 game.phase = 'Phase_Declare'
@@ -555,41 +592,54 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
                 play_audio('card', SOUND, MUSIC)
                 game.phase = 'Phase_Player'
 
-
-
+        #Creates and draws the background, buttons, deck, player's hand, computer's hand, and discard pile onto the screen
         create_background()
         create_game_buttons(button_sprite)
         create_deck(deck_sprite, game)
         create_player(player_sprite, game)
         create_computer(computer_sprite, game)
         create_discard(discard_sprite, game)
-
         button_sprite.draw(GAME_SCREEN)
         deck_sprite.draw(GAME_SCREEN)
         player_sprite.draw(GAME_SCREEN)
         computer_sprite.draw(GAME_SCREEN)
         discard_sprite.draw(GAME_SCREEN)
+
+        #Prints the current deck size out of 52 alongside the current highscore onto the screen
         print_deck_size(game, small_font)
         print_highscore(large_font)
 
+        #If either the player or computer declare during their turn
         if game.phase == 'Phase_Declare':
+            #If the player's overall score is greater than or equal to 100 (meaning they lose), 'Game Over' is printed alongside
+            #   the scores
+            #If the computer's overall score is greater than the current highscore, the highscore is updated
             if overall_player_score + game.player_score() >= 100:
                 display_score(game, button_sprite, overall_computer_score, overall_player_score, large_font, True)
                 if overall_computer_score + game.computer_score() > highscore:
                     write_value('highscore', overall_computer_score + game.computer_score())
+            #Otherwise, the scores are printed
             else:
                 display_score(game, button_sprite, overall_computer_score, overall_player_score, large_font)
 
+            #Flips all the cards in the computer's hand to the front side
             for sprite in computer_sprite:
                 sprite.flip('Front')
 
+            #All cards in the player's hand are reset to their original positions
             for sprite in player_sprite:
                 sprite.revert(PLAYER_Y)
 
-
+        #Scales everything on screen to the computer's screen size
         render_to_screen()
+
+        #Refreshes the display window
         pygame.display.update()
+
+        #Caps the game's FPS to whatever the 'FPS' variable is equal to
         clock.tick(FPS)
+
+
 
 def rules(small_font, SOUND, MUSIC):
     clock = pygame.time.Clock()
@@ -616,6 +666,8 @@ def rules(small_font, SOUND, MUSIC):
         pygame.display.update()
         clock.tick(FPS)
 
+
+
 def credits(small_font, SOUND, MUSIC):
     clock = pygame.time.Clock()
     run = True
@@ -640,6 +692,8 @@ def credits(small_font, SOUND, MUSIC):
         render_to_screen()
         pygame.display.update()
         clock.tick(FPS)
+
+
 
 def options(SOUND, MUSIC):
     clock = pygame.time.Clock()
