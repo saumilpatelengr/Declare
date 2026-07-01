@@ -46,6 +46,9 @@ receives -10 points and the declaring player receives the total points of both p
 * Pixel art graphics
 * Responsive and smooth gameplay
 
+## Gameplay Demo
+![Gameplay](/assets/images/demo/demo.gif)
+
 ## Credits
 * Card Graphics - drawsgood - [8Bit Deck Card Assets](https://drawsgood.itch.io/8bit-deck-card-assets)
 
