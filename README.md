@@ -49,6 +49,45 @@ receives -10 points and the declaring player receives the total points of both p
 ## Gameplay Demo
 ![Gameplay](/assets/images/demo/demo.gif)
 
+## Controls
+This game is played entirely with the mouse.
+
+* **Left Click (Buttons with Words)** - Navigate different screens and gameplay; have words to show what each button does (Ex: 'MENU' button takes you back to the main menu)
+
+* **Left Click (Back Arrow Button)** - Returns you back to the previous screen
+
+* **Left Click (Sound/Music Buttons)** - Allow the user to mute or unmute sound/music in the game
+
+* **Left Click (Deck)** - Allows the player to draw a card from the deck
+
+* **Left Click (Player Hand)** - Allows the player to select cards they want to drop on their turn
+
+* **Left Click (Discard Pile)** - Allows the player to pickup the top card of the discard pile
+
+* **Hovering with Mouse** - Enlarges cards in the player's hand
+
+## Download
+Coming Soon!
+
+## Running from Source
+This repository is provided for portfolio purposes only. See the LICENSE file for details. To play the game, please download or purchase the official release using the link below.
+
+Download the latest version here:
+
+## Project Structure
+```
+├── assets              #Game resources
+│   ├── audio           #Contains audio files (.mp3)
+│   ├── fonts           #Contains font files
+│   ├── images          #Contains image files (.png) for cards and UI
+│   └── pixil           #Contains .pixil files used to create .png assets
+└── src                 #Main game source code
+```
+
+## Game Mechanics
+
+## Technologies Used
+
 ## Credits
 * Card Graphics - drawsgood - [8Bit Deck Card Assets](https://drawsgood.itch.io/8bit-deck-card-assets)
 
@@ -68,4 +107,4 @@ Solo developer and maintainer of this project.
 
 ## License
 © 2026 Saumil Patel. All rights reserved.
-This repository is provided for viewing purposes only. See the LICENSE file for details.
+This repository is provided for portfolio purposes only. See the LICENSE file for details.
