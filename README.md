@@ -66,13 +66,12 @@ This game is played entirely with the mouse.
 
 * **Hovering with Mouse** - Enlarges cards in the player's hand
 
-## Download
-Coming Soon!
-
-## Running from Source
+## Running from Source / Download
 This repository is provided for portfolio purposes only. See the LICENSE file for details. To play the game, please download or purchase the official release using the link below.
 
 Download the latest version here:
+
+Coming Soon!
 
 ## Project Structure
 ```
@@ -85,8 +84,24 @@ Download the latest version here:
 ```
 
 ## Game Mechanics
+* Cards are represented as Card objects and managed in Python lists as a deck, a discard pile, and hands of cards
+* The game runs in a turn-based loop where the user can select cards to drop, draw a card from the deck, pick up a card from the discard pile, or declare their hand through the UI
+* The AI opponent makes decisions based on how many points it has in its hand, the top card of the discard pile, and which combination of cards yields the highest total value when dropped
+* Each round is represented as a Game object and when a new round starts, a new Game object is created
+* After someone declares, points are determined by comparing total hand values and seeing if someone broke an attempt or not
+* The game's state is continuously updated through a central game loop handling input, logic, and rendering
 
 ## Technologies Used
+Python 3.14.2
+
+Pygame (Game Framework)
+
+Built-in Python libraries:
+* os
+* sys
+* random
+* json
+* collections.Counter
 
 ## Credits
 * Card Graphics - drawsgood - [8Bit Deck Card Assets](https://drawsgood.itch.io/8bit-deck-card-assets)
