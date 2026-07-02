@@ -44,10 +44,12 @@ def render_to_screen():
 
 
 
-#Creates all buttons needed to play the game and adds them to button_sprite
+#Creates all buttons needed for the game screen and adds them to button_sprite
 def create_game_buttons(button_sprite):
     declare_button = ButtonSprite(VIRTUAL_WIDTH / 2, 1010, 'declare')
     button_sprite.add(declare_button)
+    back_button = ButtonSprite(100, 970, 'back')
+    button_sprite.add(back_button)
 
 
 
@@ -489,15 +491,21 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 #Player's turn
                 if game.phase == 'Phase_Player':
-                    #If the player clicks on the 'DECLARE' button during their turn, then points are counted up for the round
-                    #Plays a sound effect when the button is clicked
-                    #Changes phase to 'Phase_Declare' to handle the round's results
                     for sprite in button_sprite:
+                        #If the player clicks on the 'DECLARE' button during their turn, then points are counted up for the round
+                        #Plays a sound effect when the button is clicked
+                        #Changes phase to 'Phase_Declare' to handle the round's results
                         if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'declare':
                             play_audio('button', SOUND, MUSIC)
                             game.player_declare()
                             game.phase = 'Phase_Declare'
                             break
+
+                        #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
+                        #Plays a sound effect when the button is clicked
+                        elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'back':
+                            play_audio('button', SOUND, MUSIC)
+                            return 'menu'
 
                     #If the player clicks on any cards in their hand, they will be 'selected' and will move up slightly
                     #Plays a sound effect when a card is clicked
@@ -573,6 +581,12 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
                             overall_computer_score, overall_player_score = update_scores(game, overall_computer_score, overall_player_score)
                             selected_cards.clear()
                             game = Game()
+
+                        #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
+                        #Plays a sound effect when the button is clicked
+                        elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'back':
+                            play_audio('button', SOUND, MUSIC)
+                            return 'menu'
 
         #Computer's turn
         #'current_time - start_time >= 1000' ensures that the computer's turn takes 1 second to complete
