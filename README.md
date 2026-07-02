@@ -112,7 +112,7 @@ Coming Soon!
 ## 🛠️ Technologies Used
 Python 3.14.2
 
-Pygame (Game Framework)
+Pygame (Game Framework; licensed under LGPL 2.1)
 
 Built-in Python libraries:
 * os
