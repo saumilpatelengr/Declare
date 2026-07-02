@@ -1,9 +1,18 @@
-# Declare
+# 🎮 Declare
 
-## Description
+
+
+## 📝 Description
 Declare is a fast-paced card game designed for 2 players, utilizing a standard 52-card deck. Using strategy, probability, and deception, the goal of the game is to have your opponent have the highest amount of points before you receive more than or equal to 100 points.
 
-## Gameplay Overview
+
+
+## 🎥 Gameplay Demo
+![Gameplay](/assets/images/demo/demo.gif)
+
+
+
+## 🕹️ Gameplay Overview
 ### Goal of the Game
 The goal of the game is to have the opponent have the highest amount of points before you receive 
 more than or equal to 100 points. To achieve this, you have to have the least number of points in your 
@@ -33,23 +42,9 @@ the opposing player receives their total as points. However, if the opposing pla
 compared to the declaring player, then the declaring player’s attempt is broken. The opposing player 
 receives -10 points and the declaring player receives the total points of both players.
 
-## Features
-* Mouse controls
-* Enemy AI
-* Score tracking
-* High score system
-* Card hover effects
-* Clickable UI buttons
-* Background music and sound effects
-* Multi screen user interface
-* Persistent save system for high scores and settings
-* Pixel art graphics
-* Responsive and smooth gameplay
 
-## Gameplay Demo
-![Gameplay](/assets/images/demo/demo.gif)
 
-## Controls
+## 🎛️ Controls
 This game is played entirely with the mouse.
 
 * **Left Click (Buttons with Words)** - Navigate different screens and gameplay; have words to show what each button does (Ex: 'MENU' button takes you back to the main menu)
@@ -66,14 +61,33 @@ This game is played entirely with the mouse.
 
 * **Hovering with Mouse** - Enlarges cards in the player's hand
 
-## Running from Source / Download
+
+
+## ✨ Features
+* Mouse controls
+* Enemy AI
+* Score tracking
+* High score system
+* Card hover effects
+* Clickable UI buttons
+* Background music and sound effects
+* Multi screen user interface
+* Persistent save system for high scores and settings
+* Pixel art graphics
+* Responsive and smooth gameplay
+
+
+
+## 🚀 Running from Source / Download
 This repository is provided for portfolio purposes only. See the LICENSE file for details. To play the game, please download or purchase the official release using the link below.
 
 Download the latest version here:
 
 Coming Soon!
 
-## Project Structure
+
+
+## 📂 Project Structure
 ```
 ├── assets              #Game resources
 │   ├── audio           #Contains audio files (.mp3)
@@ -83,7 +97,9 @@ Coming Soon!
 └── src                 #Main game source code
 ```
 
-## Game Mechanics
+
+
+## ⚙️ Game Mechanics
 * Cards are represented as Card objects and managed in Python lists as a deck, a discard pile, and hands of cards
 * The game runs in a turn-based loop where the user can select cards to drop, draw a card from the deck, pick up a card from the discard pile, or declare their hand through the UI
 * The AI opponent makes decisions based on how many points it has in its hand, the top card of the discard pile, and which combination of cards yields the highest total value when dropped
@@ -91,7 +107,9 @@ Coming Soon!
 * After someone declares, points are determined by comparing total hand values and seeing if someone broke an attempt or not
 * The game's state is continuously updated through a central game loop handling input, logic, and rendering
 
-## Technologies Used
+
+
+## 🛠️ Technologies Used
 Python 3.14.2
 
 Pygame (Game Framework)
@@ -103,7 +121,14 @@ Built-in Python libraries:
 * json
 * collections.Counter
 
-## Credits
+
+
+## 🤝 Contributing
+This is a personal portfolio project maintained solely by the author. I am not accepting external contributions, pull requests, or issues.
+
+
+
+## 🙏 Credits
 * Card Graphics - drawsgood - [8Bit Deck Card Assets](https://drawsgood.itch.io/8bit-deck-card-assets)
 
 * Button Sound Effect - DRAGON-STUDIO - [Button Press](https://pixabay.com/sound-effects/film-special-effects-button-press-386165/)
@@ -114,12 +139,16 @@ Built-in Python libraries:
 
 * Pixel Font - Rosetta Type Foundry - Designed by David Březina - [Handjet](https://fonts.google.com/specimen/Handjet)
 
-## Author
+
+
+## 👨‍💻 Author
 
 **Saumil Patel**
 
 Solo developer and maintainer of this project.
 
-## License
+
+
+## 📜 License
 © 2026 Saumil Patel. All rights reserved.
 This repository is provided for portfolio purposes only. See the LICENSE file for details.
