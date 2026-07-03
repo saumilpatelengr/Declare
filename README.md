@@ -75,6 +75,7 @@ This game is played entirely with the mouse.
 * Persistent save system for high scores and settings
 * Pixel art graphics
 * Responsive and smooth gameplay
+* Scales to different screen sizes
 
 
 
