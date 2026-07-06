@@ -255,13 +255,14 @@ def create_box(X, Y, scale):
 
 
 
-#Gets filepath for the font, loads it, creates a small and large font, and returns them
+#Gets filepath for the font, loads it, creates a dictionary of fonts, and returns them
 def create_fonts():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     font_path = os.path.join(script_dir, '..', 'assets', 'fonts', 'Handjet', 'static', 'Handjet-Regular.ttf')
-    small_font = pygame.font.Font(font_path, 25)
-    large_font = pygame.font.Font(font_path, 50)
-    return large_font, small_font
+    fonts = {}
+    fonts['small'] = pygame.font.Font(font_path, 25)
+    fonts['large'] = pygame.font.Font(font_path, 50)
+    return fonts
 
 
 
@@ -355,8 +356,8 @@ def main():
     #Reads the highscore for the user (0 if no value exists)
     highscore = read_value('highscore', 0)
 
-    #Creates the small and large fonts
-    large_font, small_font = create_fonts()
+    #Creates the dictionary of fonts
+    fonts = create_fonts()
 
     #Reads the values for SOUND and MUSIC to see if they are muted or not (both are not muted if no values exist)
     SOUND = read_value('sound', True)
@@ -370,15 +371,15 @@ def main():
     run = True
     while run:
         if state == "menu":
-            state = menu(large_font, SOUND, MUSIC)
+            state = menu(fonts, SOUND, MUSIC)
         elif state == 'rules':
-            state = rules(small_font, SOUND, MUSIC)
+            state = rules(fonts, SOUND, MUSIC)
         elif state == "game":
-            state = game(highscore, large_font, small_font, SOUND, MUSIC)
+            state = game(highscore, fonts, SOUND, MUSIC)
         elif state == 'options':
             state, SOUND, MUSIC = options(SOUND, MUSIC)
         elif state == "credits":
-            state = credits(small_font, SOUND, MUSIC)
+            state = credits(fonts, SOUND, MUSIC)
         elif state == "quit":
             run = False
 
@@ -392,7 +393,7 @@ def main():
 
 
 #Runs the menu screen for the game
-def menu(large_font, SOUND, MUSIC):
+def menu(fonts, SOUND, MUSIC):
     #Used to control the FPS of the game
     clock = pygame.time.Clock()
 
@@ -431,7 +432,7 @@ def menu(large_font, SOUND, MUSIC):
         button_sprite.draw(GAME_SCREEN)
 
         #The current highscore for the user is also displayed
-        print_highscore(large_font)
+        print_highscore(fonts['large'])
 
         #Scales everything on screen to the computer's screen size
         render_to_screen()
@@ -445,7 +446,7 @@ def menu(large_font, SOUND, MUSIC):
 
 
 #Runs the actual game for the user to play
-def game(highscore, large_font, small_font, SOUND, MUSIC):
+def game(highscore, fonts, SOUND, MUSIC):
     #Used to control the FPS of the game
     clock = pygame.time.Clock()
 
@@ -620,8 +621,8 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
         discard_sprite.draw(GAME_SCREEN)
 
         #Prints the current deck size out of 52 alongside the current highscore onto the screen
-        print_deck_size(game, small_font)
-        print_highscore(large_font)
+        print_deck_size(game, fonts['small'])
+        print_highscore(fonts['large'])
 
         #If either the player or computer declare during their turn
         if game.phase == 'Phase_Declare':
@@ -629,12 +630,12 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
             #   the scores
             #If the computer's overall score is greater than the current highscore, the highscore is updated
             if overall_player_score + game.player_score() >= 100:
-                display_score(game, button_sprite, overall_computer_score, overall_player_score, large_font, True)
+                display_score(game, button_sprite, overall_computer_score, overall_player_score, fonts['large'], True)
                 if overall_computer_score + game.computer_score() > highscore:
                     write_value('highscore', overall_computer_score + game.computer_score())
             #Otherwise, the scores are printed
             else:
-                display_score(game, button_sprite, overall_computer_score, overall_player_score, large_font)
+                display_score(game, button_sprite, overall_computer_score, overall_player_score, fonts['large'])
 
             #Flips all the cards in the computer's hand to the front side
             for sprite in computer_sprite:
@@ -656,7 +657,7 @@ def game(highscore, large_font, small_font, SOUND, MUSIC):
 
 
 #Runs the rules screen for the game
-def rules(small_font, SOUND, MUSIC):
+def rules(fonts, SOUND, MUSIC):
     #Used to control the FPS of the game
     clock = pygame.time.Clock()
 
@@ -681,7 +682,7 @@ def rules(small_font, SOUND, MUSIC):
         #Creates and draws the background, back button, and rules box onto the screen
         create_background()
         button_sprite.draw(GAME_SCREEN)
-        create_rules(small_font)
+        create_rules(fonts['small'])
 
         #Scales everything on screen to the computer's screen size
         render_to_screen()
@@ -695,7 +696,7 @@ def rules(small_font, SOUND, MUSIC):
 
 
 #Runs the credits screen for the game
-def credits(small_font, SOUND, MUSIC):
+def credits(fonts, SOUND, MUSIC):
     #Used to control the FPS of the game
     clock = pygame.time.Clock()
 
@@ -720,7 +721,7 @@ def credits(small_font, SOUND, MUSIC):
         #Creates and draws the background, back button, and credits box onto the screen
         create_background()
         button_sprite.draw(GAME_SCREEN)
-        create_credits(small_font)
+        create_credits(fonts['small'])
 
         #Scales everything on screen to the computer's screen size
         render_to_screen()
