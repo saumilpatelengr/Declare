@@ -28,14 +28,14 @@ class ButtonSprite(pygame.sprite.Sprite):
             name = f'{self._name}_off_button.png'
             script_dir = os.path.dirname(os.path.abspath(__file__))
             image_path = os.path.join(script_dir, '..', 'assets', 'images', 'ui', name)
-            self._off_image = pygame.image.load(image_path).convert_alpha()
-            self._off_image = pygame.transform.scale_by(self._off_image, scale)
+            self._other_image = pygame.image.load(image_path).convert_alpha()
+            self._other_image = pygame.transform.scale_by(self._other_image, scale)
 
             #Checks to see if the button has been clicked and which version of the button should be set
             if self._click == False:
                 self.image = self._og_image
             else:
-                self.image = self._off_image
+                self.image = self._other_image
         #If any other button, the "og" or default version of the button is set
         else:
             self.image = self._og_image
@@ -63,7 +63,7 @@ class ButtonSprite(pygame.sprite.Sprite):
     def mute(self):
         old_center = self.rect.center
         if not self._click:
-            self.image = self._off_image
+            self.image = self._other_image
             self._click = True
         else:
             self.image = self._og_image
