@@ -1,6 +1,7 @@
 #Imports
 import pygame
 import os
+from paths import resource_path
 
 
 
@@ -17,8 +18,7 @@ class ButtonSprite(pygame.sprite.Sprite):
 
         #Uses the name of the button to load its image
         name = f'{name}_button.png'
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        image_path = os.path.join(script_dir, '..', 'assets', 'images', 'ui', name)
+        image_path = resource_path(os.path.join('assets', 'images', 'ui', name))
         self._og_image = pygame.image.load(image_path).convert_alpha()
         self._og_image = pygame.transform.scale_by(self._og_image, scale)
 
@@ -26,8 +26,7 @@ class ButtonSprite(pygame.sprite.Sprite):
         #Depending if they have been clicked or not, either the "on" or "off" button version of these buttons are loaded and set
         if self._name == 'music' or self._name == 'sound':
             name = f'{self._name}_off_button.png'
-            script_dir = os.path.dirname(os.path.abspath(__file__))
-            image_path = os.path.join(script_dir, '..', 'assets', 'images', 'ui', name)
+            image_path = resource_path(os.path.join('assets', 'images', 'ui', name))
             self._other_image = pygame.image.load(image_path).convert_alpha()
             self._other_image = pygame.transform.scale_by(self._other_image, scale)
 

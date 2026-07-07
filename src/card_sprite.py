@@ -1,6 +1,7 @@
 #Imports
 import pygame
 import os
+from paths import resource_path
 
 
 
@@ -28,16 +29,13 @@ class CardSprite(pygame.sprite.Sprite):
             rank = 'jack'
         name = f'{rank}_of_{(self._card.suit).lower()}.png'
 
-        #Gets the folder path of this file
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-
         #Loads the front side image for the CardSprite object
-        front_image_path = os.path.join(script_dir, '..', 'assets', 'images', 'cards', name)
+        front_image_path = resource_path(os.path.join('assets', 'images', 'cards', name))
         self._front_image = pygame.image.load(front_image_path).convert_alpha()
         self._front_image = pygame.transform.scale(self._front_image, (138, 200))
 
         #Loads the back side image for the CardSprite object
-        back_image_path = os.path.join(script_dir, '..', 'assets', 'images', 'cards', 'back_card.png')
+        back_image_path = resource_path(os.path.join('assets', 'images', 'cards', 'back_card.png'))
         self._back_image = pygame.image.load(back_image_path).convert_alpha()
         self._back_image = pygame.transform.scale(self._back_image, (138, 200))
 

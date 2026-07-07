@@ -6,6 +6,7 @@ from button_sprite import ButtonSprite
 from card_sprite import CardSprite
 from game import Game
 from save import write_value, read_value
+from paths import resource_path
 
 
 
@@ -29,8 +30,7 @@ pygame.display.set_caption("Declare")
 
 
 #Gets filepath for game icon, loads it, and sets it
-script_dir = os.path.dirname(os.path.abspath(__file__))
-icon_path = os.path.join(script_dir, '..', 'assets', 'images', 'icons', 'icon.png')
+icon_path = resource_path(os.path.join('assets', 'images', 'icons', 'icon.png'))
 icon = pygame.image.load(icon_path)
 pygame.display.set_icon(icon)
 
@@ -150,13 +150,20 @@ def display_score(game, button_sprite, overall_computer_score, overall_player_sc
     overall_computer_score += game.computer_score()
     overall_player_score += game.player_score()
 
-    #Renders and prints the font onto the screen
-    #Depending on if the player lost the game (>= 100 points), "Game Over" will also be printed
+    #Determines which lines of text to print (depending on if the player lost or not)
     if not lost:
-        text = font.render(f'Computer Score: {overall_computer_score}\nYour Score: {overall_player_score}', True, (0, 0, 0))
+        lines = [f"Computer Score: {overall_computer_score}", f"Your Score: {overall_player_score}"]
     else:
-        text = font.render(f'Computer Score: {overall_computer_score}\nYour Score: {overall_player_score}\nGame Over', True, (0, 0, 0))
-    GAME_SCREEN.blit(text, (1400, 375))
+        lines = [f"Computer Score: {overall_computer_score}", f"Your Score: {overall_player_score}","Game Over"]
+
+    #(x, y) coordinates for where to display the text on screen
+    x, y = 1400, 375
+
+    #Renders each line of text, draws it onto the screen, and gets the new y-position for the next line of text
+    for line in lines:
+        text = font.render(line, True, (0, 0, 0))
+        GAME_SCREEN.blit(text, (x, y))
+        y += text.get_height()
 
     #Creates and loads the play and menu buttons
     play_button = ButtonSprite(1575, 600, 'play')
@@ -224,8 +231,7 @@ def create_menu_buttons(button_sprite):
 
 #Gets filepath for the background, loads it, scales it to GAME_SCREEN's size, and draws it to screen
 def create_background():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    background_path = os.path.join(script_dir, '..', 'assets', 'images', 'ui', 'background.png')
+    background_path = resource_path(os.path.join('assets', 'images', 'ui', 'background.png'))
     background_image = pygame.image.load(background_path).convert_alpha()
     background_image = pygame.transform.scale(background_image, (VIRTUAL_WIDTH, VIRTUAL_HEIGHT))
     GAME_SCREEN.blit(background_image, (0, 0))
@@ -234,8 +240,7 @@ def create_background():
 
 #Gets filepath for the title, loads it, and draws it to screen
 def create_title():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    title_path = os.path.join(script_dir, '..', 'assets', 'images', 'ui', 'title.png')
+    title_path = resource_path(os.path.join('assets', 'images', 'ui', 'title.png'))
     title_image = pygame.image.load(title_path).convert_alpha()
     title_rect = title_image.get_rect()
     title_rect.center = (VIRTUAL_WIDTH / 2, 300)
@@ -245,8 +250,7 @@ def create_title():
 
 #Gets filepath for the box, loads it, sets its (x,y) coordinates, scales it, and draws it to screen
 def create_box(X, Y, scale):
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    box_path = os.path.join(script_dir, '..', 'assets', 'images', 'ui', 'box.png')
+    box_path = resource_path(os.path.join('assets', 'images', 'ui', 'box.png'))
     box_image = pygame.image.load(box_path).convert_alpha()
     box_image = pygame.transform.scale_by(box_image, scale)
     box_rect = box_image.get_rect()
@@ -257,8 +261,7 @@ def create_box(X, Y, scale):
 
 #Gets filepath for the font, loads it, creates a dictionary of fonts, and returns them
 def create_fonts():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    font_path = os.path.join(script_dir, '..', 'assets', 'fonts', 'Handjet', 'static', 'Handjet-Regular.ttf')
+    font_path = resource_path(os.path.join('assets', 'fonts', 'Handjet', 'static', 'Handjet-Regular.ttf'))
     fonts = {}
     fonts['small'] = pygame.font.Font(font_path, 25)
     fonts['large'] = pygame.font.Font(font_path, 50)
@@ -288,15 +291,20 @@ def create_rules(font):
     create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.75)
 
     #Gets filepath for rules.txt and loads it into the rules variable
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(script_dir, 'rules.txt')
+    file_path = resource_path(os.path.join('src', 'rules.txt'))
     with open(file_path, "r", encoding = "utf-8") as file:
         rules = file.read()
     
-    #Renders the font and prints it onto the screen
-    text = font.render(rules, True, (0, 0, 0))
-    text_rect = text.get_rect(center=(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2))
-    GAME_SCREEN.blit(text, text_rect)
+    #Turns the rules into a list of strings
+    lines = rules.splitlines()
+
+    #Renders each line of text, centers and draws it in the middle of the screen, and gets the new y-position for the next line of text
+    y = 140
+    for line in lines:
+        text = font.render(line, True, (0, 0, 0))
+        text_rect = text.get_rect(center=(VIRTUAL_WIDTH / 2, y))
+        GAME_SCREEN.blit(text, text_rect)
+        y += text.get_height() + 1
 
 
 
@@ -313,8 +321,7 @@ def virtual_mouse():
 #Allows for sound effects and music to be played in the game
 def play_audio(name, SOUND, MUSIC, volume = 1.0):
     #Gets the filepath for the music or sound effect
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(script_dir, '..', 'assets', 'audio', f'{name}.mp3')
+    path = resource_path(os.path.join('assets', 'audio', f'{name}.mp3'))
 
     #If the name parameter is 'music', then it will load the audio as music. Otherwise, it will load it as a sound effect
     #MUSIC and SOUND are booleans used to check if the user wants music or sound effects on while they play the game
@@ -336,15 +343,20 @@ def create_credits(font):
     create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.6)
 
     #Gets filepath for credits.txt and loads it into credits variable
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(script_dir, 'credits.txt')
-    with open(file_path, "r", encoding = "utf-8") as file:
+    file_path = resource_path(os.path.join("src", "credits.txt"))
+    with open(file_path, "r", encoding="utf-8") as file:
         credits = file.read()
 
-    #Renders the font and prints it onto the screen
-    text = font.render(credits, True, (0, 0, 0))
-    text_rect = text.get_rect(center=(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2))
-    GAME_SCREEN.blit(text, text_rect)
+    #Turns the credits into a list of strings
+    lines = credits.splitlines()
+
+    #Renders each line of text, centers and draws it in the middle of the screen, and gets the new y-position for the next line of text
+    y = 175
+    for line in lines:
+        text = font.render(line, True, (0, 0, 0))
+        text_rect = text.get_rect(center=(VIRTUAL_WIDTH / 2, y))
+        GAME_SCREEN.blit(text, text_rect)
+        y += text.get_height() + 1
 
 
 
