@@ -76,6 +76,7 @@ This game is played entirely with the mouse.
 * Pixel art graphics
 * Responsive and smooth gameplay
 * Scales to different screen sizes
+* Windows and macOS support
 
 
 
