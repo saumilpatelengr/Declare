@@ -166,11 +166,13 @@ def display_score(game, button_sprite, overall_computer_score, overall_player_sc
         y += text.get_height()
 
     #Creates and loads the play and menu buttons
-    play_button = ButtonSprite(1575, 600, 'play')
-    button_sprite.add(play_button)
-    menu_button = ButtonSprite(1575, 700, 'menu')
-    button_sprite.add(menu_button)
-    button_sprite.draw(GAME_SCREEN)
+    #Checks the size of button_sprite to ensure that buttons are not continuously added to it
+    if len(button_sprite) < 4:
+        play_button = ButtonSprite(1575, 600, 'play')
+        button_sprite.add(play_button)
+        menu_button = ButtonSprite(1575, 700, 'menu')
+        button_sprite.add(menu_button)
+        button_sprite.draw(GAME_SCREEN)
 
 
 
@@ -410,7 +412,9 @@ def menu(fonts, SOUND, MUSIC):
     clock = pygame.time.Clock()
 
     #Creates a sprite group for all the buttons on the menu screen
+    #Adds buttons to the sprite group
     button_sprite = pygame.sprite.Group()
+    create_menu_buttons(button_sprite)
 
     #Loop controls mouse click events on buttons
     #Plays a sound effect when a button is clicked
@@ -437,10 +441,11 @@ def menu(fonts, SOUND, MUSIC):
                         play_audio('button', SOUND, MUSIC)
                         return 'quit'
 
-        #Creates and draws the background, title, and buttons for the menu screen
+        #Creates and draws the background and title
         create_background()
         create_title()
-        create_menu_buttons(button_sprite)
+
+        #Draws the buttons onto the screen
         button_sprite.draw(GAME_SCREEN)
 
         #The current highscore for the user is also displayed
@@ -481,6 +486,9 @@ def game(highscore, fonts, SOUND, MUSIC):
     player_sprite = pygame.sprite.Group()
     computer_sprite = pygame.sprite.Group()
     discard_sprite = pygame.sprite.Group()
+
+    #Adds buttons to the button sprite group
+    create_game_buttons(button_sprite)
 
     #Loop controls the flow of an entire game
     run = True
@@ -587,10 +595,12 @@ def game(highscore, fonts, SOUND, MUSIC):
                         #If the player clicks the 'PLAY' button, button_sprite is emptied to remove the 'MENU' and 'PLAY' buttons
                         #   from the screen. The overall scores for both the computer and player are updated, selected_cards is emptied,
                         #   and a new Game object is created to start another round of the game
+                        #Creates the game buttons again once button_sprite is emptied
                         #Plays a sound effect when the button is clicked
                         elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'play':
                             play_audio('button', SOUND, MUSIC, 0.2)
                             button_sprite.empty()
+                            create_game_buttons(button_sprite)
                             overall_computer_score, overall_player_score = update_scores(game, overall_computer_score, overall_player_score)
                             selected_cards.clear()
                             game = Game()
@@ -619,22 +629,8 @@ def game(highscore, fonts, SOUND, MUSIC):
                 play_audio('card', SOUND, MUSIC)
                 game.phase = 'Phase_Player'
 
-        #Creates and draws the background, buttons, deck, player's hand, computer's hand, and discard pile onto the screen
+        #Creates and draws the background
         create_background()
-        create_game_buttons(button_sprite)
-        create_deck(deck_sprite, game)
-        create_player(player_sprite, game)
-        create_computer(computer_sprite, game)
-        create_discard(discard_sprite, game)
-        button_sprite.draw(GAME_SCREEN)
-        deck_sprite.draw(GAME_SCREEN)
-        player_sprite.draw(GAME_SCREEN)
-        computer_sprite.draw(GAME_SCREEN)
-        discard_sprite.draw(GAME_SCREEN)
-
-        #Prints the current deck size out of 52 alongside the current highscore onto the screen
-        print_deck_size(game, fonts['small'])
-        print_highscore(fonts['large'])
 
         #If either the player or computer declare during their turn
         if game.phase == 'Phase_Declare':
@@ -656,6 +652,23 @@ def game(highscore, fonts, SOUND, MUSIC):
             #All cards in the player's hand are reset to their original positions
             for sprite in player_sprite:
                 sprite.revert(PLAYER_Y)
+        
+        #Creates the deck, player's hand, computer's hand, and discard pile
+        create_deck(deck_sprite, game)
+        create_player(player_sprite, game)
+        create_computer(computer_sprite, game)
+        create_discard(discard_sprite, game)
+
+        #Draws the buttons, deck, player's hand, computer's hand, and discard pile onto the screen
+        button_sprite.draw(GAME_SCREEN)
+        deck_sprite.draw(GAME_SCREEN)
+        player_sprite.draw(GAME_SCREEN)
+        computer_sprite.draw(GAME_SCREEN)
+        discard_sprite.draw(GAME_SCREEN)
+
+        #Prints the current deck size out of 52 alongside the current highscore onto the screen
+        print_deck_size(game, fonts['small'])
+        print_highscore(fonts['large'])
 
         #Scales everything on screen to the computer's screen size
         render_to_screen()
