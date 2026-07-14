@@ -144,7 +144,7 @@ def create_discard(discard_sprite, game):
 #Displays the scores for both players after a round ends
 def display_score(game, button_sprite, overall_computer_score, overall_player_score, font, lost = False):
     #Creates a box where the scores and buttons will be placed
-    create_box(1575, 550, 0.8)
+    create_box(1575, 550, 0.8, 'square')
 
     #Updates the scores for the player and computer
     overall_computer_score += game.computer_score()
@@ -228,6 +228,8 @@ def create_menu_buttons(button_sprite):
     button_sprite.add(credits_button)
     quit_button = ButtonSprite(VIRTUAL_WIDTH / 2, 850, 'quit')
     button_sprite.add(quit_button)
+    avatar_button = ButtonSprite(75, 75, 'avatar')
+    button_sprite.add(avatar_button)
 
 
 
@@ -250,9 +252,9 @@ def create_title():
 
 
 
-#Gets filepath for the box, loads it, sets its (x,y) coordinates, scales it, and draws it to screen
-def create_box(X, Y, scale):
-    box_path = resource_path(os.path.join('assets', 'images', 'ui', 'box.png'))
+#Gets filepath for the box using the name parameter (square, rectangle), loads it, sets its (x,y) coordinates, scales it, and draws it to screen
+def create_box(X, Y, scale, name):
+    box_path = resource_path(os.path.join('assets', 'images', 'ui', f'{name}.png'))
     box_image = pygame.image.load(box_path).convert_alpha()
     box_image = pygame.transform.scale_by(box_image, scale)
     box_rect = box_image.get_rect()
@@ -290,7 +292,7 @@ def print_highscore(font):
 #Creates and prints all the rules of the game
 def create_rules(font):
     #Creates a box for the rules to be printed in
-    create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.75)
+    create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.75, 'square')
 
     #Gets filepath for rules.txt and loads it into the rules variable
     file_path = resource_path(os.path.join('src', 'rules.txt'))
@@ -342,7 +344,7 @@ def play_audio(name, SOUND, MUSIC, volume = 1.0):
 #Creates and prints the credits for the game
 def create_credits(font):
     #Creates a box for the credits to be printed in
-    create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.6)
+    create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.6, 'square')
 
     #Gets filepath for credits.txt and loads it into credits variable
     file_path = resource_path(os.path.join("src", "credits.txt"))
@@ -359,6 +361,27 @@ def create_credits(font):
         text_rect = text.get_rect(center=(VIRTUAL_WIDTH / 2, y))
         GAME_SCREEN.blit(text, text_rect)
         y += text.get_height() + 1
+
+
+
+#Creates and prints the player's overall stats
+def create_stats(font):
+    #Creates a box for the stats to be printed in
+    create_box(250, 225, 0.75, 'rectangle')
+
+    #All the stats that will be printed (values are read from save state)
+    lines = [f"Highscore: {read_value('highscore', 0)}", 
+             f"Games: {read_value('games', 0)}", 
+             f"Rounds: {read_value('rounds', 0)}",
+             f"Points: {read_value('points', 0)}", 
+             f"Declares: {read_value('declares', 0)}"]
+    
+    #Renders each line of text, draws it to the (x,y) coordinates, and gets the new y-position for the next line of text
+    x, y = 80, 150
+    for line in lines:
+        text = font.render(line, True, (0, 0, 0))
+        GAME_SCREEN.blit(text, (x, y))
+        y += text.get_height()
 
 
 
@@ -419,6 +442,7 @@ def menu(fonts, SOUND, MUSIC):
     #Loop controls mouse click events on buttons
     #Plays a sound effect when a button is clicked
     #Depending on the button that is clicked, a different value is returned to change between screens
+    #If the 'avatar' button is clicked on, the player's stats will be drawn onto the screen
     run = True
     while run:
         for event in pygame.event.get():
@@ -440,10 +464,18 @@ def menu(fonts, SOUND, MUSIC):
                     elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'quit':
                         play_audio('button', SOUND, MUSIC)
                         return 'quit'
+                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'avatar':
+                        play_audio('button', SOUND, MUSIC)
+                        sprite.update_click()
 
         #Creates and draws the background and title
         create_background()
         create_title()
+
+        #If the 'avatar' button is clicked on, the player's stats will be drawn onto the screen
+        for sprite in button_sprite:
+            if sprite.name == 'avatar' and sprite.click:
+                create_stats(fonts['small'])
 
         #Draws the buttons onto the screen
         button_sprite.draw(GAME_SCREEN)
@@ -490,6 +522,9 @@ def game(highscore, fonts, SOUND, MUSIC):
     #Adds buttons to the button sprite group
     create_game_buttons(button_sprite)
 
+    #Boolean to control stats are saved only once to the save state
+    once = True
+
     #Loop controls the flow of an entire game
     run = True
     while run:
@@ -516,10 +551,12 @@ def game(highscore, fonts, SOUND, MUSIC):
                         #If the player clicks on the 'DECLARE' button during their turn, then points are counted up for the round
                         #Plays a sound effect when the button is clicked
                         #Changes phase to 'Phase_Declare' to handle the round's results
+                        #Increments the 'declares' stat in the save start by 1
                         if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'declare':
                             play_audio('button', SOUND, MUSIC)
                             game.player_declare()
                             game.phase = 'Phase_Declare'
+                            write_value('declares', (read_value('declares', 0) + 1))
                             break
 
                         #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
@@ -596,6 +633,7 @@ def game(highscore, fonts, SOUND, MUSIC):
                         #   from the screen. The overall scores for both the computer and player are updated, selected_cards is emptied,
                         #   and a new Game object is created to start another round of the game
                         #Creates the game buttons again once button_sprite is emptied
+                        #'once' is set to True to ensure the next round's stats are saved correctly to the save state
                         #Plays a sound effect when the button is clicked
                         elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'play':
                             play_audio('button', SOUND, MUSIC, 0.2)
@@ -604,6 +642,7 @@ def game(highscore, fonts, SOUND, MUSIC):
                             overall_computer_score, overall_player_score = update_scores(game, overall_computer_score, overall_player_score)
                             selected_cards.clear()
                             game = Game()
+                            once = True
 
                         #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
                         #Plays a sound effect when the button is clicked
@@ -634,6 +673,18 @@ def game(highscore, fonts, SOUND, MUSIC):
 
         #If either the player or computer declare during their turn
         if game.phase == 'Phase_Declare':
+            #Once a round ends, stats are saved into the save state
+            if once:
+                #If the player lost, the 'games' stat is incremented by 1
+                #The 'rounds' stat is incremented by 1 and the 'points' stat is incremented by the computer's total points for the round
+                if overall_player_score + game.player_score() >= 100:
+                    write_value('games', (read_value('games', 0) + 1))
+                write_value('rounds', (read_value('rounds', 0) + 1))
+                write_value('points', (read_value('points', 0) + game.computer_score()))
+                
+                #'once' is set to False to ensure that the stats are only saved once per round
+                once = False
+
             #If the player's overall score is greater than or equal to 100 (meaning they lose), 'Game Over' is printed alongside
             #   the scores
             #If the computer's overall score is greater than the current highscore, the highscore is updated
@@ -828,7 +879,7 @@ def options(SOUND, MUSIC):
                         
         #Creates and draws the background, box, and buttons onto the screen
         create_background()
-        create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.0)
+        create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.0, 'square')
         button_sprite.draw(GAME_SCREEN)
 
         #Scales everything on screen to the computer's screen size
