@@ -71,5 +71,6 @@ class ButtonSprite(pygame.sprite.Sprite):
 
     
 
+    #Switches the click attribute for a ButtonSprite object
     def update_click(self):
         self._click = not self._click
