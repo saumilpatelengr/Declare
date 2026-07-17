@@ -242,10 +242,11 @@ def create_background():
 
 
 
-#Gets filepath for the title, loads it, and draws it to screen
+#Gets filepath for the title, loads it, scales it, and draws it to screen
 def create_title():
     title_path = resource_path(os.path.join('assets', 'images', 'ui', 'title.png'))
     title_image = pygame.image.load(title_path).convert_alpha()
+    title_image = pygame.transform.scale_by(title_image, 1.5)
     title_rect = title_image.get_rect()
     title_rect.center = (VIRTUAL_WIDTH / 2, 300)
     GAME_SCREEN.blit(title_image, title_rect)
