@@ -688,14 +688,16 @@ def game(highscore, fonts, SOUND, MUSIC):
 
             #If the player's overall score is greater than or equal to 100 (meaning they lose), 'Game Over' is printed alongside
             #   the scores
-            #If the computer's overall score is greater than the current highscore, the highscore is updated
             if overall_player_score + game.player_score() >= 100:
                 display_score(game, button_sprite, overall_computer_score, overall_player_score, fonts['large'], True)
-                if overall_computer_score + game.computer_score() > highscore:
-                    write_value('highscore', overall_computer_score + game.computer_score())
             #Otherwise, the scores are printed
             else:
                 display_score(game, button_sprite, overall_computer_score, overall_player_score, fonts['large'])
+
+            #If the computer's overall score is greater than the current highscore, the highscore is updated
+            if overall_computer_score + game.computer_score() > highscore:
+                    write_value('highscore', overall_computer_score + game.computer_score())
+                    highscore = overall_computer_score + game.computer_score()
 
             #Flips all the cards in the computer's hand to the front side
             for sprite in computer_sprite:
