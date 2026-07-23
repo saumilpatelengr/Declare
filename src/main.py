@@ -7,24 +7,14 @@ from card_sprite import CardSprite
 from game import Game
 from save import write_value, read_value
 from paths import resource_path
-
-
-
-#Constants for FPS and different coordinates for objects
-FPS = 60
-DECK_X, DECK_Y = 660, 550
-CARD_X = 660
-PLAYER_Y = 850
-COMPUTER_Y = 250
-DISCARD_X, DISCARD_Y = 960, 550
-VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 1920, 1080
+import constants
 
 
 
 #Initializes Pygame modules, a fullscreen window, a virtual window where everything will be loaded onto, and the window's caption
 pygame.init()
 SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-GAME_SCREEN = pygame.Surface((VIRTUAL_WIDTH, VIRTUAL_HEIGHT))
+GAME_SCREEN = pygame.Surface((constants.VIRTUAL_WIDTH, constants.VIRTUAL_HEIGHT))
 pygame.display.set_caption("Declare")
 
 
@@ -46,7 +36,7 @@ def render_to_screen():
 
 #Creates all buttons needed for the game screen and adds them to button_sprite
 def create_game_buttons(button_sprite):
-    declare_button = ButtonSprite(VIRTUAL_WIDTH / 2, 1010, 'declare')
+    declare_button = ButtonSprite(constants.VIRTUAL_WIDTH / 2, 1010, 'declare')
     button_sprite.add(declare_button)
     back_button = ButtonSprite(100, 970, 'back')
     button_sprite.add(back_button)
@@ -62,7 +52,7 @@ def create_player(player_sprite, game):
     #If a Card object exists in the backend code for the player but isn't visually shown, it will add the sprite to player_sprite
     for card in game.player.cards:
         if card not in existing_cards:
-            new_sprite = CardSprite(card, 0, PLAYER_Y)
+            new_sprite = CardSprite(card, 0, constants.PLAYER_Y)
             player_sprite.add(new_sprite)
     #If a Card object doesn't exist in the backend code for the player but does visually, it will remove the sprite from player_sprite
     for sprite in player_sprite:
@@ -85,7 +75,7 @@ def create_deck(deck_sprite, game):
     #If a Card object exists in the backend code for the deck but isn't visually shown, it will add the sprite to deck_sprite
     for card in game.deck.cards:
         if card not in existing_cards:
-            new_sprite = CardSprite(card, DECK_X, DECK_Y)
+            new_sprite = CardSprite(card, constants.DECK_X, constants.DECK_Y)
             deck_sprite.add(new_sprite)
     #If a Card object doesn't exist in the backend code for the deck but does visually, it will remove the sprite from deck_sprite
     for sprite in deck_sprite:
@@ -105,7 +95,7 @@ def create_computer(computer_sprite, game):
     #If a Card object exists in the backend code for the computer but isn't visually shown, it will add the sprite to computer_sprite
     for card in game.computer.cards:
         if card not in existing_cards:
-            new_sprite = CardSprite(card, 0, COMPUTER_Y)
+            new_sprite = CardSprite(card, 0, constants.COMPUTER_Y)
             computer_sprite.add(new_sprite)
     #If a Card object doesn't exist in the backend code for the deck but does visually, it will remove the sprite from computer_sprite
     for sprite in computer_sprite:
@@ -130,7 +120,7 @@ def create_discard(discard_sprite, game):
     #If a Card object exists in the backend code for the discard pile but isn't visually shown, it will remove the sprite from discard_sprite
     for card in game.discard.cards:
         if card not in existing_cards:
-            new_sprite = CardSprite(card, DISCARD_X, DISCARD_Y)
+            new_sprite = CardSprite(card, constants.DISCARD_X, constants.DISCARD_Y)
             discard_sprite.add(new_sprite)
     #If a Card object doesn't exist in the backend code for the discard pile but does visually, it will remove the sprite from discard_sprite
     for sprite in discard_sprite:
@@ -181,17 +171,17 @@ def card_positions(current_sprite):
     #Checks how many cards are in the hand and updates the initial X coordinate based on that
     match len(current_sprite):
         case 1:
-            X = CARD_X + 300
+            X = constants.CARD_X + 300
         case 2:
-            X = CARD_X + 225
+            X = constants.CARD_X + 225
         case 3:
-            X = CARD_X + 150
+            X = constants.CARD_X + 150
         case 4:
-            X = CARD_X + 75
+            X = constants.CARD_X + 75
         case 5:
-            X = CARD_X
+            X = constants.CARD_X
         case 6:
-            X = CARD_X - 75
+            X = constants.CARD_X - 75
     
     #Updates the X coordinate for all the cards in the hand, centering them on the screen
     for sprite in current_sprite:
@@ -218,15 +208,15 @@ def update_scores(game, overall_computer_score, overall_player_score):
 
 #Creates all the menu buttons and adds them to button_sprite
 def create_menu_buttons(button_sprite):
-    play_button = ButtonSprite((VIRTUAL_WIDTH / 2) - 250, 550, 'play')
+    play_button = ButtonSprite((constants.VIRTUAL_WIDTH / 2) - 250, 550, 'play')
     button_sprite.add(play_button)
-    rules_button = ButtonSprite((VIRTUAL_WIDTH / 2) + 250, 550, 'rules')
+    rules_button = ButtonSprite((constants.VIRTUAL_WIDTH / 2) + 250, 550, 'rules')
     button_sprite.add(rules_button)
-    options_button = ButtonSprite((VIRTUAL_WIDTH / 2) - 250, 700, 'options')
+    options_button = ButtonSprite((constants.VIRTUAL_WIDTH / 2) - 250, 700, 'options')
     button_sprite.add(options_button)
-    credits_button = ButtonSprite((VIRTUAL_WIDTH / 2) + 250, 700, 'credits')
+    credits_button = ButtonSprite((constants.VIRTUAL_WIDTH / 2) + 250, 700, 'credits')
     button_sprite.add(credits_button)
-    quit_button = ButtonSprite(VIRTUAL_WIDTH / 2, 850, 'quit')
+    quit_button = ButtonSprite(constants.VIRTUAL_WIDTH / 2, 850, 'quit')
     button_sprite.add(quit_button)
     avatar_button = ButtonSprite(75, 75, 'avatar')
     button_sprite.add(avatar_button)
@@ -237,7 +227,7 @@ def create_menu_buttons(button_sprite):
 def create_background():
     background_path = resource_path(os.path.join('assets', 'images', 'ui', 'background.png'))
     background_image = pygame.image.load(background_path).convert_alpha()
-    background_image = pygame.transform.scale(background_image, (VIRTUAL_WIDTH, VIRTUAL_HEIGHT))
+    background_image = pygame.transform.scale(background_image, (constants.VIRTUAL_WIDTH, constants.VIRTUAL_HEIGHT))
     GAME_SCREEN.blit(background_image, (0, 0))
 
 
@@ -248,7 +238,7 @@ def create_title():
     title_image = pygame.image.load(title_path).convert_alpha()
     title_image = pygame.transform.scale_by(title_image, 1.5)
     title_rect = title_image.get_rect()
-    title_rect.center = (VIRTUAL_WIDTH / 2, 300)
+    title_rect.center = (constants.VIRTUAL_WIDTH / 2, 300)
     GAME_SCREEN.blit(title_image, title_rect)
 
 
@@ -278,7 +268,7 @@ def create_fonts():
 def print_deck_size(game, font):
     size = game.deck.size()
     text = font.render(f'{size}/52', True, (255, 255, 255))
-    GAME_SCREEN.blit(text, (535, VIRTUAL_HEIGHT / 2))
+    GAME_SCREEN.blit(text, (535, constants.VIRTUAL_HEIGHT / 2))
 
 
 
@@ -293,7 +283,7 @@ def print_highscore(font):
 #Creates and prints all the rules of the game
 def create_rules(font):
     #Creates a box for the rules to be printed in
-    create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.75, 'square')
+    create_box(constants.VIRTUAL_WIDTH / 2,constants.VIRTUAL_HEIGHT / 2, 1.75, 'square')
 
     #Gets filepath for rules.txt and loads it into the rules variable
     file_path = resource_path(os.path.join('src', 'rules.txt'))
@@ -307,7 +297,7 @@ def create_rules(font):
     y = 140
     for line in lines:
         text = font.render(line, True, (0, 0, 0))
-        text_rect = text.get_rect(center=(VIRTUAL_WIDTH / 2, y))
+        text_rect = text.get_rect(center=(constants.VIRTUAL_WIDTH / 2, y))
         GAME_SCREEN.blit(text, text_rect)
         y += text.get_height() + 1
 
@@ -317,8 +307,8 @@ def create_rules(font):
 #Allows computers with different display sizes to click on objects on the screen correctly
 def virtual_mouse():
     mouse_x, mouse_y = pygame.mouse.get_pos()
-    mouse_x = mouse_x * VIRTUAL_WIDTH / SCREEN.get_width()
-    mouse_y = mouse_y * VIRTUAL_HEIGHT / SCREEN.get_height()
+    mouse_x = mouse_x * constants.VIRTUAL_WIDTH / SCREEN.get_width()
+    mouse_y = mouse_y * constants.VIRTUAL_HEIGHT / SCREEN.get_height()
     return mouse_x, mouse_y
 
 
@@ -345,7 +335,7 @@ def play_audio(name, SOUND, MUSIC, volume = 1.0):
 #Creates and prints the credits for the game
 def create_credits(font):
     #Creates a box for the credits to be printed in
-    create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.6, 'square')
+    create_box(constants.VIRTUAL_WIDTH / 2, constants.VIRTUAL_HEIGHT / 2, 1.6, 'square')
 
     #Gets filepath for credits.txt and loads it into credits variable
     file_path = resource_path(os.path.join("src", "credits.txt"))
@@ -359,7 +349,7 @@ def create_credits(font):
     y = 175
     for line in lines:
         text = font.render(line, True, (0, 0, 0))
-        text_rect = text.get_rect(center=(VIRTUAL_WIDTH / 2, y))
+        text_rect = text.get_rect(center=(constants.VIRTUAL_WIDTH / 2, y))
         GAME_SCREEN.blit(text, text_rect)
         y += text.get_height() + 1
 
@@ -491,7 +481,7 @@ def menu(fonts, SOUND, MUSIC):
         pygame.display.update()
 
         #Caps the game's FPS to whatever the 'FPS' variable is equal to
-        clock.tick(FPS)
+        clock.tick(constants.FPS)
             
 
 
@@ -584,7 +574,7 @@ def game(highscore, fonts, SOUND, MUSIC):
                             chosen_cards = game.player_select_cards(selected_cards)
                             if chosen_cards == None:
                                 for sprite in player_sprite:
-                                    sprite.revert(PLAYER_Y)
+                                    sprite.revert(constants.PLAYER_Y)
                                 play_audio('card', SOUND, MUSIC, 0.2)
                                 selected_cards.clear()
                             else:
@@ -608,7 +598,7 @@ def game(highscore, fonts, SOUND, MUSIC):
                             chosen_cards = game.player_select_cards(selected_cards)
                             if chosen_cards == None:
                                 for sprite in player_sprite:
-                                    sprite.revert(PLAYER_Y)
+                                    sprite.revert(constants.PLAYER_Y)
                                 play_audio('card', SOUND, MUSIC, 0.2)
                                 selected_cards.clear()
                             else:   
@@ -705,7 +695,7 @@ def game(highscore, fonts, SOUND, MUSIC):
 
             #All cards in the player's hand are reset to their original positions
             for sprite in player_sprite:
-                sprite.revert(PLAYER_Y)
+                sprite.revert(constants.PLAYER_Y)
         
         #Creates the deck, player's hand, computer's hand, and discard pile
         create_deck(deck_sprite, game)
@@ -731,7 +721,7 @@ def game(highscore, fonts, SOUND, MUSIC):
         pygame.display.update()
 
         #Caps the game's FPS to whatever the 'FPS' variable is equal to
-        clock.tick(FPS)
+        clock.tick(constants.FPS)
 
 
 
@@ -770,7 +760,7 @@ def rules(fonts, SOUND, MUSIC):
         pygame.display.update()
 
         #Caps the game's FPS to whatever the 'FPS' variable is equal to
-        clock.tick(FPS)
+        clock.tick(constants.FPS)
 
 
 
@@ -809,7 +799,7 @@ def credits(fonts, SOUND, MUSIC):
         pygame.display.update()
 
         #Caps the game's FPS to whatever the 'FPS' variable is equal to
-        clock.tick(FPS)
+        clock.tick(constants.FPS)
 
 
 
@@ -826,17 +816,17 @@ def options(SOUND, MUSIC):
     #If SOUND is True, then draws the 'ON' version of the sound button onto the screen (all sound effects will play in the game)
     #Otherwise, it will draw the 'OFF' version of the sound button onto the screen (all sound effects are muted in the game)
     if SOUND:
-        sound_button = ButtonSprite((VIRTUAL_WIDTH / 2) - 150, VIRTUAL_HEIGHT / 2, 'sound', 0.75, False)
+        sound_button = ButtonSprite((constants.VIRTUAL_WIDTH / 2) - 150, constants.VIRTUAL_HEIGHT / 2, 'sound', 0.75, False)
     else:
-        sound_button = ButtonSprite((VIRTUAL_WIDTH / 2) - 150, VIRTUAL_HEIGHT / 2, 'sound', 0.75, True)
+        sound_button = ButtonSprite((constants.VIRTUAL_WIDTH / 2) - 150, constants.VIRTUAL_HEIGHT / 2, 'sound', 0.75, True)
     button_sprite.add(sound_button)
 
     #If MUSIC is True, then draws the 'ON' version of the music button onto the screen (music will play in the game)
     #Otherwise, it will draw the 'OFF' version of the music button onto the screen (music will be muted in the game)
     if MUSIC:
-        music_button = ButtonSprite((VIRTUAL_WIDTH / 2) + 150, VIRTUAL_HEIGHT / 2, 'music', 0.75, False)
+        music_button = ButtonSprite((constants.VIRTUAL_WIDTH / 2) + 150, constants.VIRTUAL_HEIGHT / 2, 'music', 0.75, False)
     else:
-        music_button = ButtonSprite((VIRTUAL_WIDTH / 2) + 150, VIRTUAL_HEIGHT / 2, 'music', 0.75, True)
+        music_button = ButtonSprite((constants.VIRTUAL_WIDTH / 2) + 150, constants.VIRTUAL_HEIGHT / 2, 'music', 0.75, True)
     button_sprite.add(music_button)
 
     #Loop controls mouse click events on buttons
@@ -882,7 +872,7 @@ def options(SOUND, MUSIC):
                         
         #Creates and draws the background, box, and buttons onto the screen
         create_background()
-        create_box(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 1.0, 'square')
+        create_box(constants.VIRTUAL_WIDTH / 2, constants.VIRTUAL_HEIGHT / 2, 1.0, 'square')
         button_sprite.draw(GAME_SCREEN)
 
         #Scales everything on screen to the computer's screen size
@@ -892,7 +882,7 @@ def options(SOUND, MUSIC):
         pygame.display.update()
 
         #Caps the game's FPS to whatever the 'FPS' variable is equal to
-        clock.tick(FPS)
+        clock.tick(constants.FPS)
 
 
 

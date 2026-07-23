@@ -1,0 +1,8 @@
+#Constants for FPS and different coordinates for objects
+FPS = 60
+DECK_X, DECK_Y = 660, 550
+CARD_X = 660
+PLAYER_Y = 850
+COMPUTER_Y = 250
+DISCARD_X, DISCARD_Y = 960, 550
+VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 1920, 1080
