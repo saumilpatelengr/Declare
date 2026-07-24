@@ -4,7 +4,7 @@ import os
 import random
 from button_sprite import ButtonSprite
 from game import Game
-from save import write_value, read_value
+from save import write_value, read_value, reset_stats
 from paths import resource_path
 import constants as c
 import graphics as g
@@ -27,9 +27,6 @@ def main():
     #Initial state to show the menu screen first
     state = "menu"
 
-    #Reads the highscore for the user (0 if no value exists)
-    highscore = read_value('highscore', 0)
-
     #Creates the dictionary of fonts
     fonts = l.create_fonts()
 
@@ -49,9 +46,9 @@ def main():
         elif state == 'rules':
             state = rules(fonts, SOUND, MUSIC)
         elif state == "game":
-            state = game(highscore, fonts, SOUND, MUSIC)
+            state = game(fonts, SOUND, MUSIC)
         elif state == 'options':
-            state, SOUND, MUSIC = options(SOUND, MUSIC)
+            state, SOUND, MUSIC = options(SOUND, MUSIC, fonts)
         elif state == "credits":
             state = credits(fonts, SOUND, MUSIC)
         elif state == "quit":
@@ -132,7 +129,7 @@ def menu(fonts, SOUND, MUSIC):
 
 
 #Runs the actual game for the user to play
-def game(highscore, fonts, SOUND, MUSIC):
+def game(fonts, SOUND, MUSIC):
     #Used to control the FPS of the game
     clock = pygame.time.Clock()
 
@@ -148,6 +145,9 @@ def game(highscore, fonts, SOUND, MUSIC):
     #Sets both the player's and computer's overall score to 0
     overall_player_score = 0
     overall_computer_score = 0
+
+    #Reads the highscore for the user (0 if no value exists)
+    highscore = read_value('highscore', 0)
 
     #Creates sprite groups for buttons, the deck, the player, the computer, and the discard pile
     button_sprite = pygame.sprite.Group()
@@ -450,30 +450,16 @@ def credits(fonts, SOUND, MUSIC):
 
 
 #Runs the options screen for the game
-def options(SOUND, MUSIC):
+def options(SOUND, MUSIC, fonts):
     #Used to control the FPS of the game
     clock = pygame.time.Clock()
 
-    #Creates a sprite group that can hold a single sprite; creates the back button and adds it to the sprite group
+    #Creates a sprite group; creates all the option screen buttons and adds them to button_sprite
     button_sprite = pygame.sprite.Group()
-    back_button = ButtonSprite(100, 970, 'back')
-    button_sprite.add(back_button)
+    l.create_options_buttons(button_sprite, SOUND, MUSIC)
 
-    #If SOUND is True, then draws the 'ON' version of the sound button onto the screen (all sound effects will play in the game)
-    #Otherwise, it will draw the 'OFF' version of the sound button onto the screen (all sound effects are muted in the game)
-    if SOUND:
-        sound_button = ButtonSprite((c.VIRTUAL_WIDTH / 2) - 150, c.VIRTUAL_HEIGHT / 2, 'sound', 0.75, False)
-    else:
-        sound_button = ButtonSprite((c.VIRTUAL_WIDTH / 2) - 150, c.VIRTUAL_HEIGHT / 2, 'sound', 0.75, True)
-    button_sprite.add(sound_button)
-
-    #If MUSIC is True, then draws the 'ON' version of the music button onto the screen (music will play in the game)
-    #Otherwise, it will draw the 'OFF' version of the music button onto the screen (music will be muted in the game)
-    if MUSIC:
-        music_button = ButtonSprite((c.VIRTUAL_WIDTH / 2) + 150, c.VIRTUAL_HEIGHT / 2, 'music', 0.75, False)
-    else:
-        music_button = ButtonSprite((c.VIRTUAL_WIDTH / 2) + 150, c.VIRTUAL_HEIGHT / 2, 'music', 0.75, True)
-    button_sprite.add(music_button)
+    #Boolean flag used to see if reset button is pressed
+    reset = False
 
     #Loop controls mouse click events on buttons
     #Plays a sound effect when a button is clicked
@@ -488,6 +474,7 @@ def options(SOUND, MUSIC):
                     if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'back':
                         a.play_audio('button', SOUND, MUSIC)
                         return 'menu', SOUND, MUSIC
+                    
                     #If the music button is clicked, it will change if the button was clicked or not (button not being
                     #   clicked means that music is 'ON' and it being clicked means that music is 'OFF')
                     #If the click attribute changes to True, then it will change MUSIC to False and pause all music in
@@ -502,6 +489,7 @@ def options(SOUND, MUSIC):
                         else:
                             MUSIC = True
                             pygame.mixer.music.unpause()
+
                     #If the sound button is clicked, it will change if the button was clicked or not (button not being 
                     #   clicked means that sound is 'ON' and it being clicked means that sound is 'OFF')
                     #If the click attribute changes to True, then it will change SOUND to False and any sound effects in
@@ -515,11 +503,44 @@ def options(SOUND, MUSIC):
                             SOUND = False
                         else:
                             SOUND = True
+
+                    #If the reset button is clicked, it will delete all the sprites in button_sprite, create the confirmation 
+                    #   message buttons, and set reset to True
+                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'reset':
+                        a.play_audio('button', SOUND, MUSIC)
+                        button_sprite.empty()
+                        l.create_confirmation_buttons(button_sprite)
+                        reset = True
+
+                    #If the yes button is clicked, it will reset all the player's stats and go back to the original options screen
+                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'yes':
+                        a.play_audio('button', SOUND, MUSIC)
+                        reset_stats()
+                        return 'options', SOUND, MUSIC
+
+                    #If the no button is clicked, it will go back to the original options screen
+                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'no':
+                        a.play_audio('button', SOUND, MUSIC)
+                        return 'options', SOUND, MUSIC
                         
         #Creates and draws the background, box, and buttons onto the screen
         g.create_background(GAME_SCREEN)
         g.create_box(GAME_SCREEN, c.VIRTUAL_WIDTH / 2, c.VIRTUAL_HEIGHT / 2, 1.0, 'square')
         button_sprite.draw(GAME_SCREEN)
+
+        #If reset is True (after the reset button is clicked), then a confirmation message will be displayed on screen alongside
+        #   the confirmation buttons
+        if reset:
+            #Confirmation message split up in a list
+            lines = ['Delete Player Stats', 'Are you sure you want', 'to continue?']
+            
+            #Renders each line of text, centers and draws it in the middle of the screen, and gets the new y-position for the next line of text
+            y = 350
+            for line in lines:
+                text = fonts['large'].render(line, True, (0, 0, 0))
+                text_rect = text.get_rect(center=(c.VIRTUAL_WIDTH / 2, y))
+                GAME_SCREEN.blit(text, text_rect)
+                y += text.get_height() + 1
 
         #Scales everything on screen to the computer's screen size
         g.render_to_screen(GAME_SCREEN, SCREEN)

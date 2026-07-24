@@ -179,3 +179,40 @@ def virtual_mouse(SCREEN):
     mouse_x = mouse_x * c.VIRTUAL_WIDTH / SCREEN.get_width()
     mouse_y = mouse_y * c.VIRTUAL_HEIGHT / SCREEN.get_height()
     return mouse_x, mouse_y
+
+
+
+#Creates all buttons needed for the options screen and adds them to button_sprite
+def create_options_buttons(button_sprite, SOUND, MUSIC):
+    #Creates the back and reset buttons
+    back_button = ButtonSprite(100, 970, 'back')
+    button_sprite.add(back_button)
+    reset_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2) + 100, 'reset')
+    button_sprite.add(reset_button)
+
+    #If SOUND is True, then draws the 'ON' version of the sound button onto the screen (all sound effects will play in the game)
+    #Otherwise, it will draw the 'OFF' version of the sound button onto the screen (all sound effects are muted in the game)
+    if SOUND:
+        sound_button = ButtonSprite(c.SOUND_X, c.SOUND_Y, 'sound', 0.75, False)
+    else:
+        sound_button = ButtonSprite(c.SOUND_X, c.SOUND_Y, 'sound', 0.75, True)
+    button_sprite.add(sound_button)
+
+    #If MUSIC is True, then draws the 'ON' version of the music button onto the screen (music will play in the game)
+    #Otherwise, it will draw the 'OFF' version of the music button onto the screen (music will be muted in the game)
+    if MUSIC:
+        music_button = ButtonSprite(c.MUSIC_X, c.MUSIC_Y, 'music', 0.75, False)
+    else:
+        music_button = ButtonSprite(c.MUSIC_X, c.MUSIC_Y, 'music', 0.75, True)
+    button_sprite.add(music_button)
+
+
+
+#Creates all the buttons needed for the confirmation screen and adds them to button_sprite
+def create_confirmation_buttons(button_sprite):
+    back_button = ButtonSprite(100, 970, 'back')
+    button_sprite.add(back_button)
+    yes_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2), 'yes')
+    button_sprite.add(yes_button)
+    no_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2) + 100, 'no')
+    button_sprite.add(no_button)

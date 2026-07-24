@@ -53,3 +53,12 @@ def read_value(key, default=None):
     #Loads data and returns requested value
     data = load_save()
     return data.get(key, default)
+
+
+
+#Resets all of the player's saved stats
+def reset_stats():
+    data = load_save()
+    for key in data:
+        if key != 'sound' and key != 'music':
+            write_value(key, 0)
