@@ -162,6 +162,9 @@ def game(fonts, SOUND, MUSIC):
     #Boolean to control stats are saved only once to the save state
     once = True
 
+    #Boolean to control when the confirmation screen is shown when the player wants to quit from the game
+    quit = False
+
     #Loop controls the flow of an entire game
     run = True
     while run:
@@ -196,11 +199,17 @@ def game(fonts, SOUND, MUSIC):
                             write_value('declares', (read_value('declares', 0) + 1))
                             break
 
-                        #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
+                        #If the back button is clicked on, changes phase to 'Phase_Quit' and sets previous phase to 'Phase_Player'
+                        #button_sprite is emptied so that the confirmation screen buttons can be added to it
+                        #quit is set to True to stop other objects from being displayed on the screen
                         #Plays a sound effect when the button is clicked
                         elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'back':
                             a.play_audio('button', SOUND, MUSIC)
-                            return 'menu'
+                            game.phase = 'Phase_Quit'
+                            game.previous_phase = 'Phase_Player'
+                            button_sprite.empty()
+                            l.create_confirmation_buttons(button_sprite)
+                            quit = True
 
                     #If the player clicks on any cards in their hand, they will be 'selected' and will move up slightly
                     #Plays a sound effect when a card is clicked
@@ -260,11 +269,17 @@ def game(fonts, SOUND, MUSIC):
                 elif game.phase == 'Phase_Declare':
                     #If the player clicks on any buttons in the score box
                     for sprite in button_sprite:
-                        #If the player clicks the 'MENU' button, then the user will be redirected to the menu screen
+                        #If the player clicks the 'MENU' button, changes phase to 'Phase_Quit' and sets previous phase to 'Phase_Declare'
+                        #button_sprite is emptied so that the confirmation screen buttons can be added to it
+                        #quit is set to True to stop other objects from being displayed on the screen
                         #Plays a sound effect when the button is clicked
                         if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'menu':
                             a.play_audio('button', SOUND, MUSIC)
-                            return 'menu'
+                            game.phase = 'Phase_Quit'
+                            game.previous_phase = 'Phase_Declare'
+                            button_sprite.empty()
+                            l.create_confirmation_buttons(button_sprite)
+                            quit = True
 
                         #If the player clicks the 'PLAY' button, button_sprite is emptied to remove the 'MENU' and 'PLAY' buttons
                         #   from the screen. The overall scores for both the computer and player are updated, selected_cards is emptied,
@@ -281,12 +296,39 @@ def game(fonts, SOUND, MUSIC):
                             game = Game()
                             once = True
 
-                        #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
+                        #If the back button is clicked on, changes phase to 'Phase_Quit' and sets previous phase to 'Phase_Declare'
+                        #button_sprite is emptied so that the confirmation screen buttons can be added to it
+                        #quit is set to True to stop other objects from being displayed on the screen
                         #Plays a sound effect when the button is clicked
                         elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'back':
                             a.play_audio('button', SOUND, MUSIC)
+                            game.phase = 'Phase_Quit'
+                            game.previous_phase = 'Phase_Declare'
+                            button_sprite.empty()
+                            l.create_confirmation_buttons(button_sprite)
+                            quit = True
+
+                #If the player wants to quit from the game
+                elif game.phase == 'Phase_Quit':
+                    #If the player clicks on any buttons in the confirmation box
+                    for sprite in button_sprite:
+                        #If the yes button is clicked on, returns 'menu' and goes back to the menu screen
+                        #Plays a sound effect when the button is clicked
+                        if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'yes':
+                            a.play_audio('button', SOUND, MUSIC)
                             return 'menu'
 
+                        #If the no button is clicked on, changes phase back to the previous phase
+                        #button_sprite is emptied so that the game buttons can be added to it
+                        #quit is set to False to allow objects to be displayed on the screen again
+                        #Plays a sound effect when the button is clicked
+                        elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'no':
+                            a.play_audio('button', SOUND, MUSIC)
+                            game.phase = game.previous_phase
+                            button_sprite.empty()
+                            l.create_game_buttons(button_sprite)
+                            quit = False
+        
         #Computer's turn
         #'current_time - start_time >= 1000' ensures that the computer's turn takes 1 second to complete
         if game.phase == 'Phase_Computer' and current_time - start_time >= 1000:
@@ -342,6 +384,22 @@ def game(fonts, SOUND, MUSIC):
             #All cards in the player's hand are reset to their original positions
             for sprite in player_sprite:
                 sprite.revert(c.PLAYER_Y)
+
+        #If the player wants to quit from the game
+        if game.phase == 'Phase_Quit':
+            #Creates a box to house the buttons and message
+            g.create_box(GAME_SCREEN, c.VIRTUAL_WIDTH / 2, c.VIRTUAL_HEIGHT / 2, 1.0, 'square')
+
+            #Confirmation message split up in a list
+            lines = ['Quit To Menu?', 'Game progress will be lost', 'Stats will be saved']
+            
+            #Renders each line of text, centers and draws it in the middle of the screen, and gets the new y-position for the next line of text
+            y = 350
+            for line in lines:
+                text = fonts['large'].render(line, True, (0, 0, 0))
+                text_rect = text.get_rect(center=(c.VIRTUAL_WIDTH / 2, y))
+                GAME_SCREEN.blit(text, text_rect)
+                y += text.get_height() + 1
         
         #Creates the deck, player's hand, computer's hand, and discard pile
         l.create_deck(deck_sprite, game)
@@ -350,15 +408,16 @@ def game(fonts, SOUND, MUSIC):
         l.create_discard(discard_sprite, game)
 
         #Draws the buttons, deck, player's hand, computer's hand, and discard pile onto the screen
-        button_sprite.draw(GAME_SCREEN)
-        deck_sprite.draw(GAME_SCREEN)
-        player_sprite.draw(GAME_SCREEN)
-        computer_sprite.draw(GAME_SCREEN)
-        discard_sprite.draw(GAME_SCREEN)
-
         #Prints the current deck size out of 52 alongside the current highscore onto the screen
-        g.print_deck_size(GAME_SCREEN, game, fonts['small'])
-        g.print_highscore(GAME_SCREEN, fonts['large'])
+        #If quit is True, then everything besides button_sprite is not drawn on screen
+        button_sprite.draw(GAME_SCREEN)
+        if not quit:
+            deck_sprite.draw(GAME_SCREEN)
+            player_sprite.draw(GAME_SCREEN)
+            computer_sprite.draw(GAME_SCREEN)
+            discard_sprite.draw(GAME_SCREEN)
+            g.print_deck_size(GAME_SCREEN, game, fonts['small'])
+            g.print_highscore(GAME_SCREEN, fonts['large'])
 
         #Scales everything on screen to the computer's screen size
         g.render_to_screen(GAME_SCREEN, SCREEN)
@@ -509,7 +568,7 @@ def options(SOUND, MUSIC, fonts):
                     elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'reset':
                         a.play_audio('button', SOUND, MUSIC)
                         button_sprite.empty()
-                        l.create_confirmation_buttons(button_sprite)
+                        l.create_confirmation_buttons(button_sprite, True)
                         reset = True
 
                     #If the yes button is clicked, it will reset all the player's stats and go back to the original options screen
@@ -532,7 +591,7 @@ def options(SOUND, MUSIC, fonts):
         #   the confirmation buttons
         if reset:
             #Confirmation message split up in a list
-            lines = ['Delete Player Stats', 'Are you sure you want', 'to continue?']
+            lines = ['Delete Player Stats?', 'Are you sure?']
             
             #Renders each line of text, centers and draws it in the middle of the screen, and gets the new y-position for the next line of text
             y = 350

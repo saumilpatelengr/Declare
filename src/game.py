@@ -18,6 +18,9 @@ class Game:
         #Phase attribute to see what phase of the game it is currently
         self._phase = 'Phase_Player'
 
+        #Previous phase attribute to keep track of the previous phase of the game when needed
+        self._previous_phase = None
+
 
 
     #Allows phase attribute to be accessed outside of this class
@@ -31,6 +34,20 @@ class Game:
     @phase.setter
     def phase(self, phase):
         self._phase = phase
+
+
+
+    #Allows previous phase attribute to be accessed outside of this class
+    @property
+    def previous_phase(self):
+        return self._previous_phase
+
+
+
+    #Allows previous phase attribute to be set outside of this class
+    @previous_phase.setter
+    def previous_phase(self, previous_phase):
+        self._previous_phase = previous_phase
 
 
 

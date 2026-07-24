@@ -209,9 +209,13 @@ def create_options_buttons(button_sprite, SOUND, MUSIC):
 
 
 #Creates all the buttons needed for the confirmation screen and adds them to button_sprite
-def create_confirmation_buttons(button_sprite):
-    back_button = ButtonSprite(100, 970, 'back')
-    button_sprite.add(back_button)
+def create_confirmation_buttons(button_sprite, back = False):
+    #If back is True, back button is added to button_sprite. Otherwise, it is not
+    if back:
+        back_button = ButtonSprite(100, 970, 'back')
+        button_sprite.add(back_button)
+
+    #Adds yes and no buttons to button_sprite
     yes_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2), 'yes')
     button_sprite.add(yes_button)
     no_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2) + 100, 'no')
