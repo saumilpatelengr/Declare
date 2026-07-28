@@ -51,6 +51,8 @@ def main():
             state, SOUND, MUSIC = options(SOUND, MUSIC, fonts)
         elif state == "credits":
             state = credits(fonts, SOUND, MUSIC)
+        elif state == "stats":
+            state = stats(fonts, SOUND, MUSIC)
         elif state == "quit":
             run = False
 
@@ -97,6 +99,9 @@ def menu(fonts, SOUND, MUSIC):
                     elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'quit':
                         a.play_audio('button', SOUND, MUSIC)
                         return 'quit'
+                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'stats':
+                        a.play_audio('button', SOUND, MUSIC)
+                        return 'stats'
                     
         #Creates and draws the background and title
         g.create_background(GAME_SCREEN)
@@ -591,6 +596,45 @@ def options(SOUND, MUSIC, fonts):
                 text_rect = text.get_rect(center=(c.VIRTUAL_WIDTH / 2, y))
                 GAME_SCREEN.blit(text, text_rect)
                 y += text.get_height() + 1
+
+        #Scales everything on screen to the computer's screen size
+        g.render_to_screen(GAME_SCREEN, SCREEN)
+
+        #Refreshes the display window
+        pygame.display.update()
+
+        #Caps the game's FPS to whatever the 'FPS' variable is equal to
+        clock.tick(c.FPS)
+
+
+
+#Runs the stats screen for the game
+def stats(fonts, SOUND, MUSIC):
+    #Used to control the FPS of the game
+    clock = pygame.time.Clock()
+
+    #Creates a sprite group that can hold a single sprite; creates the back button and adds it to the sprite group
+    button_sprite = pygame.sprite.GroupSingle()
+    back_button = ButtonSprite(100, 970, 'back')
+    button_sprite.add(back_button)
+
+    #Loop controls mouse click events on the back button
+    #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
+    #Plays a sound effect when the button is clicked
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = l.virtual_mouse(SCREEN)
+                for sprite in button_sprite:
+                    if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'back':
+                        a.play_audio('button', SOUND, MUSIC)
+                        return 'menu'
+
+        #Creates and draws the background, back button, and stats box onto the screen
+        g.create_background(GAME_SCREEN)
+        button_sprite.draw(GAME_SCREEN)
+        g.create_stats(GAME_SCREEN, fonts['large'])
 
         #Scales everything on screen to the computer's screen size
         g.render_to_screen(GAME_SCREEN, SCREEN)
