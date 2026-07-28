@@ -76,7 +76,6 @@ def menu(fonts, SOUND, MUSIC):
     #Loop controls mouse click events on buttons
     #Plays a sound effect when a button is clicked
     #Depending on the button that is clicked, a different value is returned to change between screens
-    #If the 'avatar' button is clicked on, the player's stats will be drawn onto the screen
     run = True
     while run:
         for event in pygame.event.get():
@@ -98,18 +97,10 @@ def menu(fonts, SOUND, MUSIC):
                     elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'quit':
                         a.play_audio('button', SOUND, MUSIC)
                         return 'quit'
-                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'avatar':
-                        a.play_audio('button', SOUND, MUSIC)
-                        sprite.update_click()
-
+                    
         #Creates and draws the background and title
         g.create_background(GAME_SCREEN)
         g.create_title(GAME_SCREEN)
-
-        #If the 'avatar' button is clicked on, the player's stats will be drawn onto the screen
-        for sprite in button_sprite:
-            if sprite.name == 'avatar' and sprite.click:
-                g.create_stats(GAME_SCREEN, fonts['small'])
 
         #Draws the buttons onto the screen
         button_sprite.draw(GAME_SCREEN)

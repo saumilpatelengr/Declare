@@ -68,9 +68,3 @@ class ButtonSprite(pygame.sprite.Sprite):
             self.image = self._og_image
             self._click = False
         self.rect = self.image.get_rect(center = old_center)
-
-    
-
-    #Switches the click attribute for a ButtonSprite object
-    def update_click(self):
-        self._click = not self._click

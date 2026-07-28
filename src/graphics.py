@@ -141,24 +141,3 @@ def create_credits(GAME_SCREEN, font):
         text_rect = text.get_rect(center=(c.VIRTUAL_WIDTH / 2, y))
         GAME_SCREEN.blit(text, text_rect)
         y += text.get_height() + 1
-
-
-
-#Creates and prints the player's overall stats
-def create_stats(GAME_SCREEN, font):
-    #Creates a box for the stats to be printed in
-    create_box(GAME_SCREEN, 250, 225, 0.75, 'rectangle')
-
-    #All the stats that will be printed (values are read from save state)
-    lines = [f"Highscore: {read_value('highscore', 0)}", 
-             f"Games: {read_value('games', 0)}", 
-             f"Rounds: {read_value('rounds', 0)}",
-             f"Points: {read_value('points', 0)}", 
-             f"Declares: {read_value('declares', 0)}"]
-    
-    #Renders each line of text, draws it to the (x,y) coordinates, and gets the new y-position for the next line of text
-    x, y = 80, 150
-    for line in lines:
-        text = font.render(line, True, (0, 0, 0))
-        GAME_SCREEN.blit(text, (x, y))
-        y += text.get_height()

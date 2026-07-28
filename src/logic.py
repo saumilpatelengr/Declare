@@ -157,8 +157,6 @@ def create_menu_buttons(button_sprite):
     button_sprite.add(credits_button)
     quit_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, 850, 'quit')
     button_sprite.add(quit_button)
-    avatar_button = ButtonSprite(75, 75, 'avatar')
-    button_sprite.add(avatar_button)
 
 
 
