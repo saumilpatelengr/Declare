@@ -96,7 +96,9 @@ Coming Soon!
 │   ├── audio           #Contains audio files (.mp3)
 │   ├── fonts           #Contains font files
 │   ├── images          #Contains image files (.png) for cards and UI
-│   └── pixil           #Contains .pixil files used to create .png assets
+└── raw                 #Contains raw files used to create .png assets
+|   ├── pixil           #Contains .pixil files used to create .png assets for cards and UI
+|.  └── psd             #Contains .psd files used to create .png assets for the Steam Store Page
 └── src                 #Main game source code
 ```
 
