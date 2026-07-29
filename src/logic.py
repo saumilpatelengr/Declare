@@ -216,7 +216,7 @@ def create_confirmation_buttons(button_sprite, back = False):
         button_sprite.add(back_button)
 
     #Adds yes and no buttons to button_sprite
-    yes_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2), 'yes')
+    yes_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2) + 50, 'yes')
     button_sprite.add(yes_button)
-    no_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2) + 100, 'no')
+    no_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2) + 150, 'no')
     button_sprite.add(no_button)

@@ -176,3 +176,29 @@ def create_stats(GAME_SCREEN, font):
 
         #Gets the new y-position for the next line of text
         y += text.get_height() + 1
+
+
+
+#Creates and draws a guide to assist the player during their turns
+def guide(GAME_SCREEN, font, phase, selected_cards):
+    #Depending on the current phase of the game, lines is initialized with different lists of strings
+    if phase == 'Phase_Player' and len(selected_cards) == 0:
+        lines = ['Click on card(s) to', 'select them. Must', 'be the same rank.']
+    elif phase == 'Phase_Player' and len(selected_cards) > 0:
+        lines = ['Click on deck to draw', 'or discard pile to', 'pickup the top card.']
+    elif phase == 'Phase_Computer':
+        lines = ["Opponent's turn..."]
+
+    #If lines is not empty, then it will be displayed on screen
+    if lines:
+        #Creates a box for the strings to be drawn in
+        create_box(GAME_SCREEN, 1575, 460, 0.8, 'rectangle')
+        
+        #(x, y) coordinates for where to display the text on screen
+        x, y = 1400, 375
+    
+        #Renders each line of text, draws it onto the screen, and gets the new y-position for the next line of text
+        for line in lines:
+            text = font.render(line, True, (0, 0, 0))
+            GAME_SCREEN.blit(text, (x, y))
+            y += text.get_height()

@@ -403,17 +403,20 @@ def game(fonts, SOUND, MUSIC):
         l.create_computer(computer_sprite, game)
         l.create_discard(discard_sprite, game)
 
-        #Draws the buttons, deck, player's hand, computer's hand, and discard pile onto the screen
-        #Prints the current deck size out of 52 alongside the current highscore onto the screen
         #If quit is True, then everything besides button_sprite is not drawn on screen
         button_sprite.draw(GAME_SCREEN)
         if not quit:
+            #Draws the buttons, deck, player's hand, computer's hand, and discard pile onto the screen
+            #Prints the current deck size out of 52 alongside the current highscore onto the screen
             deck_sprite.draw(GAME_SCREEN)
             player_sprite.draw(GAME_SCREEN)
             computer_sprite.draw(GAME_SCREEN)
             discard_sprite.draw(GAME_SCREEN)
             g.print_deck_size(GAME_SCREEN, game, fonts['small'])
             g.print_highscore(GAME_SCREEN, fonts['large'])
+
+            #Prints a guide for the player to aid them during their turns
+            g.guide(GAME_SCREEN, fonts['large'], game.phase, selected_cards)
 
         #Scales everything on screen to the computer's screen size
         g.render_to_screen(GAME_SCREEN, SCREEN)
