@@ -163,14 +163,16 @@ def create_stats(GAME_SCREEN, font):
 
     #Renders all the text, draws it onto the screen, and gets the new y-position for the next line of text
     y = 175
-    for word in words:
+    for word, number in zip(words, numbers):
+        #Draws the word onto the screen
         text = font.render(word, True, (0, 0, 0))
         text_rect = text.get_rect(topleft=(600, y))
         GAME_SCREEN.blit(text, text_rect)
-        y += text.get_height() + 1
-    y = 175
-    for number in numbers:
+
+        #Draws the number onto the screen
         text = font.render(number, True, (0, 0, 0))
         text_rect = text.get_rect(topright=(1300, y))
         GAME_SCREEN.blit(text, text_rect)
+
+        #Gets the new y-position for the next line of text
         y += text.get_height() + 1
