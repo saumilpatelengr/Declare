@@ -1,3 +1,4 @@
+#logic.py: Contains functions that effect and setup anything being displayed on the screen indirectly for the game
 #Imports
 import pygame
 import os

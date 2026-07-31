@@ -1,3 +1,4 @@
+#game.py: Contains the Game class that combines the logic of the Deck, Discard, and Hand classes for the game
 #Imports
 from deck import Deck
 from discard import Discard

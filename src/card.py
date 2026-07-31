@@ -1,3 +1,4 @@
+#card.py: Contains the Card class that dictates how the cards' logic work for the game
 #Card class
 class Card:
     #Creates a standard playing card with its rank and suit

@@ -1,3 +1,4 @@
+#main.py: Combines all the code from the other files and creates the game loops for the game
 #Imports
 import pygame
 import os

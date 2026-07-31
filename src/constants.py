@@ -1,4 +1,4 @@
-#Constants for FPS and different coordinates for objects
+#constants.py: Contains constants for FPS and different coordinates for objects for the game
 FPS = 60
 DECK_X, DECK_Y = 660, 550
 CARD_X = 660

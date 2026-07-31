@@ -1,3 +1,4 @@
+#paths.py: Contains functions relating to file paths for the game
 #Imports
 import os
 import sys

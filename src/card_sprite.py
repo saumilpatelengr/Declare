@@ -1,3 +1,4 @@
+#card_sprite.py: Contains the CardSprite class that dictates how the cards visually work for the game
 #Imports
 import pygame
 import os

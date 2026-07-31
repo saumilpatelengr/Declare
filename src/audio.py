@@ -1,3 +1,4 @@
+#audio.py: Contains functions relating to the audio for the game
 #Imports
 import pygame
 import os

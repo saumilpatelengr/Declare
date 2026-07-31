@@ -1,3 +1,4 @@
+#hand.py: Contains the Hand class that dictates the card hand's logic for the game
 #Imports
 from collections import Counter
 from card import Card

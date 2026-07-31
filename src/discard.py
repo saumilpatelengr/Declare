@@ -1,3 +1,4 @@
+#discard.py: Contains the Discard class that dictates how the discard pile logic works for the game
 #Discard class
 class Discard:
     #Creates an empty discard pile

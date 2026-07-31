@@ -1,3 +1,4 @@
+#mode_sprite: Contains the ModeSprite class that dictates how the mode cards work for the game
 #Imports
 import pygame
 import os

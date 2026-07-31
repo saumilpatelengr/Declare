@@ -1,3 +1,4 @@
+#button_sprite.py: Contains the ButtonSprite class that dictates how the buttons work for the game
 #Imports
 import pygame
 import os

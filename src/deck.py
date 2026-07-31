@@ -1,3 +1,4 @@
+#deck.py: Contains the Deck class that dictates how the deck logic works for the game
 #Imports
 import random
 from card import Card

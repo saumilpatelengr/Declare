@@ -1,3 +1,4 @@
+#graphics.py: Contains functions that dictate anything being directly displayed on the screen for the game
 #Imports
 import pygame
 import os
