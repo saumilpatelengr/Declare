@@ -29,11 +29,12 @@ The rest of the deck is then placed face down between the players.
 ### How to Play
 To complete a turn, you must either click the DECLARE button to end the round or by dropping cards 
 from your hand. You should click the DECLARE button when you think you have the least number of 
-points in your hand compared to your opponent. You must drop a single card or multiple cards of the 
+points in your hand compared to the computer. You must drop a single card or multiple cards of the 
 same rank on each of your turns (unless you declare). To select the card(s) you want to drop, you can 
 simply click on them and they will start to hover. After selecting what cards you want to drop, you 
 must either click on the deck to draw a card or the discard pile to pickup the top card. All dropped 
-cards will be put into the discard pile face up.
+cards will be put into the discard pile face up. Different game modes will have modifiers that change 
+some of the rules of the game slightly, but the core gameplay remains the same in all game modes.
 
 ### Scoring
 When a player declares, the value of all of their cards are added up to get their total. Totals are then 
@@ -71,13 +72,14 @@ This game is played entirely with the mouse.
 * Card hover effects
 * Clickable UI buttons
 * Background music and sound effects
-* Multi screen user interface
+* Multi-screen user interface
 * Persistent save system for high scores and settings
 * Pixel art graphics
 * Responsive and smooth gameplay
 * Scales to different screen sizes
-* Player Statistics
+* Player statistics
 * Windows and macOS support
+* Different game modes
 
 
 
