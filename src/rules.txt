@@ -1,8 +1,8 @@
 GOAL OF THE GAME
-The goal of the game is to have the opponent have the highest amount of points before you receive 
+The goal of the game is to have the computer have the highest amount of points before you receive 
 more than or equal to 100 points. To achieve this, you have to have the least number of points in your 
 hand when a player declares each round. If you receive more than or equal to 100 points across any 
-number of rounds, the game is over and the opponent’s total score will be your score for that game. 
+number of rounds, the game is over and the computer’s total score will be your score for that game. 
 A game is played until you receive more than or equal to 100 points.
 
 CONTENTS AND SETUP
@@ -14,11 +14,12 @@ The rest of the deck is then placed face down between the players.
 HOW TO PLAY
 To complete a turn, you must either click the DECLARE button to end the round or by dropping cards 
 from your hand. You should click the DECLARE button when you think you have the least number of 
-points in your hand compared to your opponent. You must drop a single card or multiple cards of the 
+points in your hand compared to the computer. You must drop a single card or multiple cards of the 
 same rank on each of your turns (unless you declare). To select the card(s) you want to drop, you can 
 simply click on them and they will start to hover. After selecting what cards you want to drop, you 
 must either click on the deck to draw a card or the discard pile to pickup the top card. All dropped 
-cards will be put into the discard pile face up.
+cards will be put into the discard pile face up. Different game modes will have modifiers that change 
+some of the rules of the game slightly, but the core gameplay remains the same in all game modes.
 
 SCORING
 When a player declares, the value of all of their cards are added up to get their total. Totals are then 

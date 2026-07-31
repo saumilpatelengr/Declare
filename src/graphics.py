@@ -94,7 +94,7 @@ def print_deck_size(GAME_SCREEN, game, font):
 #Creates and prints all the rules of the game
 def create_rules(GAME_SCREEN, font):
     #Creates a box for the rules to be printed in
-    create_box(GAME_SCREEN, c.VIRTUAL_WIDTH / 2,c.VIRTUAL_HEIGHT / 2, 1.75)
+    create_box(GAME_SCREEN, c.VIRTUAL_WIDTH / 2,c.VIRTUAL_HEIGHT / 2, 1.8)
 
     #Gets filepath for rules.txt and loads it into the rules variable
     file_path = resource_path(os.path.join('src', 'rules.txt'))
