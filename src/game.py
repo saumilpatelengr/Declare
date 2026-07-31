@@ -8,12 +8,13 @@ from hand import Hand
 #Game class
 class Game:
     #Creates all initial items to play
-    def __init__(self):
+    def __init__(self, player_size = 5, computer_size = 5):
         #Creates all the objects needed to play the game
+        #'player_size' and 'computer_size' determine what the hand sizes are for the player and computer
         self._deck = Deck()
         self._discard = Discard()
-        self._player = Hand(self._deck)
-        self._computer = Hand(self._deck)
+        self._player = Hand(self._deck, player_size)
+        self._computer = Hand(self._deck, computer_size)
 
         #Phase attribute to see what phase of the game it is currently
         self._phase = 'Phase_Player'

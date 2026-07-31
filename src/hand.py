@@ -6,11 +6,12 @@ from card import Card
 
 #Hand class
 class Hand:
-    #Creates a hand of 5 cards drawn from the deck
-    def __init__(self, deck):
+    #Creates a hand of cards drawn from the deck
+    #Hand size is determined by the size parameter
+    def __init__(self, deck, size):
         self._score = 0
         self._cards = []
-        for i in range(5):
+        for i in range(size):
             self._cards.append(deck.cards.pop())
 
 

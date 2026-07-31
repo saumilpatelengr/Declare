@@ -5,6 +5,7 @@ from button_sprite import ButtonSprite
 import constants as c
 from card_sprite import CardSprite
 from paths import resource_path
+from mode_sprite import ModeSprite
 
 
 
@@ -220,3 +221,18 @@ def create_confirmation_buttons(button_sprite, back = False):
     button_sprite.add(yes_button)
     no_button = ButtonSprite(c.VIRTUAL_WIDTH / 2, (c.VIRTUAL_HEIGHT / 2) + 150, 'no')
     button_sprite.add(no_button)
+
+
+
+#Creates all the buttons needed for the selection screen and adds them to button_sprite
+def create_mode_buttons(button_sprite):
+    back_button = ButtonSprite(100, 970, 'back')
+    button_sprite.add(back_button)
+    normal_mode = ModeSprite('normal', 360, c.VIRTUAL_HEIGHT / 2)
+    button_sprite.add(normal_mode)
+    creation_mode = ModeSprite('creation', 760, c.VIRTUAL_HEIGHT / 2)
+    button_sprite.add(creation_mode)
+    preservation_mode = ModeSprite('preservation', 1160, c.VIRTUAL_HEIGHT / 2)
+    button_sprite.add(preservation_mode)
+    destruction_mode = ModeSprite('destruction', 1560, c.VIRTUAL_HEIGHT / 2)
+    button_sprite.add(destruction_mode)

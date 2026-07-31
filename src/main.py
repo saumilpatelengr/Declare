@@ -10,6 +10,7 @@ import constants as c
 import graphics as g
 import logic as l
 import audio as a
+from mode_sprite import ModeSprite
 
 
 
@@ -37,22 +38,27 @@ def main():
     #Starts playing the music for the game
     a.play_audio('music', SOUND, MUSIC)
 
+    #Initializes mode variable that determines what game mode the player is playing
+    mode = None
+
     #Loop controls the different screens the user can access using return values
     #The loop breaks once the user presses the 'QUIT' button
     run = True
     while run:
         if state == "menu":
-            state = menu(fonts, SOUND, MUSIC)
+            state = menu(SOUND, MUSIC)
         elif state == 'rules':
             state = rules(fonts, SOUND, MUSIC)
         elif state == "game":
-            state = game(fonts, SOUND, MUSIC)
+            state = game(fonts, SOUND, MUSIC, mode)
         elif state == 'options':
             state, SOUND, MUSIC = options(SOUND, MUSIC, fonts)
         elif state == "credits":
             state = credits(fonts, SOUND, MUSIC)
         elif state == "stats":
             state = stats(fonts, SOUND, MUSIC)
+        elif state == "selection":
+            state, mode = selection(fonts, SOUND, MUSIC)
         elif state == "quit":
             run = False
 
@@ -66,7 +72,7 @@ def main():
 
 
 #Runs the menu screen for the game
-def menu(fonts, SOUND, MUSIC):
+def menu(SOUND, MUSIC):
     #Used to control the FPS of the game
     clock = pygame.time.Clock()
 
@@ -86,7 +92,7 @@ def menu(fonts, SOUND, MUSIC):
                 for sprite in button_sprite:
                     if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'play':
                         a.play_audio('button', SOUND, MUSIC)
-                        return 'game'
+                        return 'selection'
                     elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'rules':
                         a.play_audio('button', SOUND, MUSIC)
                         return 'rules'
@@ -110,9 +116,6 @@ def menu(fonts, SOUND, MUSIC):
         #Draws the buttons onto the screen
         button_sprite.draw(GAME_SCREEN)
 
-        #The current highscore for the user is also displayed
-        g.print_highscore(GAME_SCREEN, fonts['large'])
-
         #Scales everything on screen to the computer's screen size
         g.render_to_screen(GAME_SCREEN, SCREEN)
 
@@ -125,12 +128,21 @@ def menu(fonts, SOUND, MUSIC):
 
 
 #Runs the actual game for the user to play
-def game(fonts, SOUND, MUSIC):
+def game(fonts, SOUND, MUSIC, mode):
     #Used to control the FPS of the game
     clock = pygame.time.Clock()
 
     #Creates a Game object that represents a single round being played
-    game = Game()
+    #Depending on what the mode parameter is, values are passed into the Game object
+    #Creation mode: +1 card for player
+    #Destruction mode: -1 card for computer
+    match mode:
+        case 'normal' | 'preservation':
+            game = Game()
+        case 'creation':
+            game = Game(6, 5)
+        case 'destruction':
+            game = Game(5, 4)
 
     #Holds the cards that the user wants to drop during their turn
     selected_cards = []
@@ -142,8 +154,8 @@ def game(fonts, SOUND, MUSIC):
     overall_player_score = 0
     overall_computer_score = 0
 
-    #Reads the highscore for the user (0 if no value exists)
-    highscore = read_value('highscore', 0)
+    #Reads the highscore for the player for the chosen mode (0 if no value exists)
+    highscore = read_value(f'{mode}_highscore', 0)
 
     #Creates sprite groups for buttons, the deck, the player, the computer, and the discard pile
     button_sprite = pygame.sprite.Group()
@@ -151,6 +163,10 @@ def game(fonts, SOUND, MUSIC):
     player_sprite = pygame.sprite.Group()
     computer_sprite = pygame.sprite.Group()
     discard_sprite = pygame.sprite.Group()
+
+    #Creates a sprite group for the mode card and adds a sprite to it
+    mode_sprite = pygame.sprite.GroupSingle()
+    mode_sprite.add(ModeSprite(mode, 275, c.VIRTUAL_HEIGHT / 2))
 
     #Adds buttons to the button sprite group
     l.create_game_buttons(button_sprite)
@@ -219,11 +235,18 @@ def game(fonts, SOUND, MUSIC):
                     #If not valid, all cards in the player's hand will be reset to their original positions and selected_cards is emptied
                     #If valid, the player draws a card, drops all selected cards, selected_cards is emptied, and its now the computer's turn.
                     #   start_time is set to current_time and will be used to ensure that the computer takes only 1 second to take its turn
+                    #Exception: if the game mode is preservation and the player selects more than 1 card when clicking the deck, all cards
+                    #   in the player's hand will be reset to their original positions and selected_cards is emptied
                     #Plays a sound effect when cards are reset or when a card is drawn
                     for sprite in deck_sprite:
                         if sprite.rect.collidepoint(mouse_x, mouse_y):
                             chosen_cards = game.player_select_cards(selected_cards)
                             if chosen_cards == None:
+                                for sprite in player_sprite:
+                                    sprite.revert(c.PLAYER_Y)
+                                a.play_audio('card', SOUND, MUSIC, 0.2)
+                                selected_cards.clear()
+                            elif mode == 'preservation' and len(selected_cards) > 1:
                                 for sprite in player_sprite:
                                     sprite.revert(c.PLAYER_Y)
                                 a.play_audio('card', SOUND, MUSIC, 0.2)
@@ -243,11 +266,18 @@ def game(fonts, SOUND, MUSIC):
                     #If valid, the player will pickup the top card of the discard pile, drop all selected cards, selected_cards is emptied, and
                     #   its now the computer's turn. start_time is set to current_time and will be used to ensure that the computer takes only 
                     #   1 second to take its turn
+                    #Exception: if the game mode is preservation and the player selects more than 1 card when clicking the discard pile, all
+                    #   cards in the player's hand will be reset to their original positions and selected_cards is emptied
                     #Plays a sound effect when cards are reset or when a card is picked up from the discard pile
                     for sprite in discard_sprite:
                         if sprite.rect.collidepoint(mouse_x, mouse_y):
                             chosen_cards = game.player_select_cards(selected_cards)
                             if chosen_cards == None:
+                                for sprite in player_sprite:
+                                    sprite.revert(c.PLAYER_Y)
+                                a.play_audio('card', SOUND, MUSIC, 0.2)
+                                selected_cards.clear()
+                            elif mode == 'preservation' and len(selected_cards) > 1:
                                 for sprite in player_sprite:
                                     sprite.revert(c.PLAYER_Y)
                                 a.play_audio('card', SOUND, MUSIC, 0.2)
@@ -278,8 +308,7 @@ def game(fonts, SOUND, MUSIC):
                             quit = True
 
                         #If the player clicks the 'PLAY' button, button_sprite is emptied to remove the 'MENU' and 'PLAY' buttons
-                        #   from the screen. The overall scores for both the computer and player are updated, selected_cards is emptied,
-                        #   and a new Game object is created to start another round of the game
+                        #   from the screen. The overall scores for both the computer and player are updated & selected_cards is emptied.
                         #Creates the game buttons again once button_sprite is emptied
                         #'once' is set to True to ensure the next round's stats are saved correctly to the save state
                         #Plays a sound effect when the button is clicked
@@ -289,8 +318,19 @@ def game(fonts, SOUND, MUSIC):
                             l.create_game_buttons(button_sprite)
                             overall_computer_score, overall_player_score = l.update_scores(game, overall_computer_score, overall_player_score)
                             selected_cards.clear()
-                            game = Game()
                             once = True
+
+                            #A new Game object is created to start another round of the game
+                            #Depending on what the mode parameter is, values are passed into the Game object
+                            #Creation mode: +1 card for player
+                            #Destruction mode: -1 card for computer
+                            match mode:
+                                    case 'normal' | 'preservation':
+                                        game = Game()
+                                    case 'creation':
+                                        game = Game(6, 5)
+                                    case 'destruction':
+                                        game = Game(5, 4)
 
                         #If the back button is clicked on, changes phase to 'Phase_Quit' and sets previous phase to 'Phase_Declare'
                         #button_sprite is emptied so that the confirmation screen buttons can be added to it
@@ -308,11 +348,11 @@ def game(fonts, SOUND, MUSIC):
                 elif game.phase == 'Phase_Quit':
                     #If the player clicks on any buttons in the confirmation box
                     for sprite in button_sprite:
-                        #If the yes button is clicked on, returns 'menu' and goes back to the menu screen
+                        #If the yes button is clicked on, returns 'selection' and goes back to the selection screen
                         #Plays a sound effect when the button is clicked
                         if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'yes':
                             a.play_audio('button', SOUND, MUSIC)
-                            return 'menu'
+                            return 'selection'
 
                         #If the no button is clicked on, changes phase back to the previous phase
                         #button_sprite is emptied so that the game buttons can be added to it
@@ -368,9 +408,9 @@ def game(fonts, SOUND, MUSIC):
             else:
                 g.display_score(GAME_SCREEN, game, button_sprite, overall_computer_score, overall_player_score, fonts['large'])
 
-            #If the computer's overall score is greater than the current highscore, the highscore is updated
+            #If the computer's overall score is greater than the current game mode's highscore, the game mode's highscore is updated
             if overall_computer_score + game.computer_score() > highscore:
-                    write_value('highscore', overall_computer_score + game.computer_score())
+                    write_value(f'{mode}_highscore', overall_computer_score + game.computer_score())
                     highscore = overall_computer_score + game.computer_score()
 
             #Flips all the cards in the computer's hand to the front side
@@ -384,10 +424,10 @@ def game(fonts, SOUND, MUSIC):
         #If the player wants to quit from the game
         if game.phase == 'Phase_Quit':
             #Creates a box to house the buttons and message
-            g.create_box(GAME_SCREEN, c.VIRTUAL_WIDTH / 2, c.VIRTUAL_HEIGHT / 2, 1.0, 'square')
+            g.create_box(GAME_SCREEN, c.VIRTUAL_WIDTH / 2, c.VIRTUAL_HEIGHT / 2, 1.0)
 
             #Confirmation message split up in a list
-            lines = ['Quit To Menu?', 'Game progress will be lost', 'Stats will be saved']
+            lines = ['Quit To Selection Menu?', 'Game progress will be lost', 'Stats will be saved']
             
             #Renders each line of text, centers and draws it in the middle of the screen, and gets the new y-position for the next line of text
             y = 350
@@ -406,17 +446,21 @@ def game(fonts, SOUND, MUSIC):
         #If quit is True, then everything besides button_sprite is not drawn on screen
         button_sprite.draw(GAME_SCREEN)
         if not quit:
-            #Draws the buttons, deck, player's hand, computer's hand, and discard pile onto the screen
-            #Prints the current deck size out of 52 alongside the current highscore onto the screen
+            #Draws the buttons, deck, player's hand, computer's hand, discard pile, and mode card onto the screen
             deck_sprite.draw(GAME_SCREEN)
             player_sprite.draw(GAME_SCREEN)
             computer_sprite.draw(GAME_SCREEN)
             discard_sprite.draw(GAME_SCREEN)
+            mode_sprite.draw(GAME_SCREEN)
+
+            #Prints the current deck size out of 52 onto the screen
             g.print_deck_size(GAME_SCREEN, game, fonts['small'])
-            g.print_highscore(GAME_SCREEN, fonts['large'])
 
             #Prints a guide for the player to aid them during their turns
-            g.guide(GAME_SCREEN, fonts['large'], game.phase, selected_cards)
+            g.guide(GAME_SCREEN, fonts['large'], game.phase, selected_cards, mode)
+
+            #Prints the description for the mode card onto the screen
+            mode_sprite.sprite.print_description(GAME_SCREEN, fonts)
 
         #Scales everything on screen to the computer's screen size
         g.render_to_screen(GAME_SCREEN, SCREEN)
@@ -583,7 +627,7 @@ def options(SOUND, MUSIC, fonts):
                         
         #Creates and draws the background, box, and buttons onto the screen
         g.create_background(GAME_SCREEN)
-        g.create_box(GAME_SCREEN, c.VIRTUAL_WIDTH / 2, c.VIRTUAL_HEIGHT / 2, 1.0, 'square')
+        g.create_box(GAME_SCREEN, c.VIRTUAL_WIDTH / 2, c.VIRTUAL_HEIGHT / 2, 1.0)
         button_sprite.draw(GAME_SCREEN)
 
         #If reset is True (after the reset button is clicked), then a confirmation message will be displayed on screen alongside
@@ -638,6 +682,63 @@ def stats(fonts, SOUND, MUSIC):
         g.create_background(GAME_SCREEN)
         button_sprite.draw(GAME_SCREEN)
         g.create_stats(GAME_SCREEN, fonts['large'])
+
+        #Scales everything on screen to the computer's screen size
+        g.render_to_screen(GAME_SCREEN, SCREEN)
+
+        #Refreshes the display window
+        pygame.display.update()
+
+        #Caps the game's FPS to whatever the 'FPS' variable is equal to
+        clock.tick(c.FPS)
+
+
+
+#Runs the selection screen for the game
+def selection(fonts, SOUND, MUSIC):
+    #Used to control the FPS of the game
+    clock = pygame.time.Clock()
+
+    #Creates a sprite group; creates all the mode screen buttons and adds them to button_sprite
+    button_sprite = pygame.sprite.Group()
+    l.create_mode_buttons(button_sprite)
+
+    #Loop controls mouse click events on buttons
+    #If the back button is clicked on, 'menu' is returned and the screen changes to the menu screen
+    #If any of the other buttons are clicked on, 'game' is returned with the mode's name as a second return value that
+    #   will allow the user to play a specific game mode
+    #Plays a sound effect when the button is clicked
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = l.virtual_mouse(SCREEN)
+                for sprite in button_sprite:
+                    if sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'back':
+                        a.play_audio('button', SOUND, MUSIC)
+                        return 'menu', None
+                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'normal':
+                        a.play_audio('button', SOUND, MUSIC)
+                        return 'game', 'normal'
+                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'creation':
+                        a.play_audio('button', SOUND, MUSIC)
+                        return 'game', 'creation'
+                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'preservation':
+                        a.play_audio('button', SOUND, MUSIC)
+                        return 'game', 'preservation'
+                    elif sprite.rect.collidepoint(mouse_x, mouse_y) and sprite.name == 'destruction':
+                        a.play_audio('button', SOUND, MUSIC)
+                        return 'game', 'destruction'
+
+        #Creates and draws the background and buttons onto the screen
+        g.create_background(GAME_SCREEN)
+        button_sprite.draw(GAME_SCREEN)
+
+        #Besides the back button, the mode button's description and highscores are printed onto the screen below the buttons
+        for sprite in button_sprite:
+            if sprite.name != 'back':
+                sprite.print_description(GAME_SCREEN, fonts)
+                sprite.print_highscore(GAME_SCREEN, fonts['large'])
 
         #Scales everything on screen to the computer's screen size
         g.render_to_screen(GAME_SCREEN, SCREEN)
