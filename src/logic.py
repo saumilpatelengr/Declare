@@ -169,7 +169,8 @@ def create_fonts():
     font_path = resource_path(os.path.join('assets', 'fonts', 'Handjet', 'static', 'Handjet-Regular.ttf'))
     fonts = {}
     fonts['small'] = pygame.font.Font(font_path, 25)
-    fonts['large'] = pygame.font.Font(font_path, 50)
+    fonts['medium'] = pygame.font.Font(font_path, 50)
+    fonts['large'] = pygame.font.Font(font_path, 75)
     return fonts
 
 

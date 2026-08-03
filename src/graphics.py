@@ -207,3 +207,11 @@ def guide(GAME_SCREEN, font, phase, selected_cards, mode):
             text = font.render(line, True, (0, 0, 0))
             GAME_SCREEN.blit(text, (x, y))
             y += text.get_height()
+
+
+
+#Centers and prints a single line of text onto the screen
+def print_single_line(GAME_SCREEN, font, text, color, x, y):
+    text = font.render(text, True, color)
+    text_rect = text.get_rect(center=(x, y))
+    GAME_SCREEN.blit(text, text_rect)

@@ -404,10 +404,10 @@ def game(fonts, SOUND, MUSIC, mode):
             #If the player's overall score is greater than or equal to 100 (meaning they lose), 'Game Over' is printed alongside
             #   the scores
             if overall_player_score + game.player_score() >= 100:
-                g.display_score(GAME_SCREEN, game, button_sprite, overall_computer_score, overall_player_score, fonts['large'], True)
+                g.display_score(GAME_SCREEN, game, button_sprite, overall_computer_score, overall_player_score, fonts['medium'], True)
             #Otherwise, the scores are printed
             else:
-                g.display_score(GAME_SCREEN, game, button_sprite, overall_computer_score, overall_player_score, fonts['large'])
+                g.display_score(GAME_SCREEN, game, button_sprite, overall_computer_score, overall_player_score, fonts['medium'])
 
             #If the computer's overall score is greater than the current game mode's highscore, the game mode's highscore is updated
             if overall_computer_score + game.computer_score() > highscore:
@@ -433,7 +433,7 @@ def game(fonts, SOUND, MUSIC, mode):
             #Renders each line of text, centers and draws it in the middle of the screen, and gets the new y-position for the next line of text
             y = 350
             for line in lines:
-                text = fonts['large'].render(line, True, (0, 0, 0))
+                text = fonts['medium'].render(line, True, (0, 0, 0))
                 text_rect = text.get_rect(center=(c.VIRTUAL_WIDTH / 2, y))
                 GAME_SCREEN.blit(text, text_rect)
                 y += text.get_height() + 1
@@ -458,7 +458,7 @@ def game(fonts, SOUND, MUSIC, mode):
             g.print_deck_size(GAME_SCREEN, game, fonts['small'])
 
             #Prints a guide for the player to aid them during their turns
-            g.guide(GAME_SCREEN, fonts['large'], game.phase, selected_cards, mode)
+            g.guide(GAME_SCREEN, fonts['medium'], game.phase, selected_cards, mode)
 
             #Prints the description for the mode card onto the screen
             mode_sprite.sprite.print_description(GAME_SCREEN, fonts)
@@ -640,7 +640,7 @@ def options(SOUND, MUSIC, fonts):
             #Renders each line of text, centers and draws it in the middle of the screen, and gets the new y-position for the next line of text
             y = 350
             for line in lines:
-                text = fonts['large'].render(line, True, (0, 0, 0))
+                text = fonts['medium'].render(line, True, (0, 0, 0))
                 text_rect = text.get_rect(center=(c.VIRTUAL_WIDTH / 2, y))
                 GAME_SCREEN.blit(text, text_rect)
                 y += text.get_height() + 1
@@ -682,7 +682,7 @@ def stats(fonts, SOUND, MUSIC):
         #Creates and draws the background, back button, and stats box onto the screen
         g.create_background(GAME_SCREEN)
         button_sprite.draw(GAME_SCREEN)
-        g.create_stats(GAME_SCREEN, fonts['large'])
+        g.create_stats(GAME_SCREEN, fonts['medium'])
 
         #Scales everything on screen to the computer's screen size
         g.render_to_screen(GAME_SCREEN, SCREEN)
@@ -739,7 +739,10 @@ def selection(fonts, SOUND, MUSIC):
         for sprite in button_sprite:
             if sprite.name != 'back':
                 sprite.print_description(GAME_SCREEN, fonts)
-                sprite.print_highscore(GAME_SCREEN, fonts['large'])
+                sprite.print_highscore(GAME_SCREEN, fonts['medium'])
+
+        #Prints 'SELECT GAME MODE' onto the selection screen
+        g.print_single_line(GAME_SCREEN, fonts['large'], 'SELECT GAME MODE', (255, 255, 255), c.VIRTUAL_WIDTH / 2, 200)
 
         #Scales everything on screen to the computer's screen size
         g.render_to_screen(GAME_SCREEN, SCREEN)
