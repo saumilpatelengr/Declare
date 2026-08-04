@@ -100,7 +100,7 @@ Coming Soon!
 │   ├── images          #Contains image files (.png) for cards and UI
 └── raw                 #Contains raw files used to create .png assets
 |   ├── pixil           #Contains .pixil files used to create .png assets for cards and UI
-|.  └── psd             #Contains .psd files used to create .png assets for the Steam Store Page
+|   └── psd             #Contains .psd files used to create .png assets for the Steam Store Page
 └── src                 #Main game source code
 ```
 
