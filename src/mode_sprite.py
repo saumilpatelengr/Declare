@@ -50,7 +50,7 @@ class ModeSprite(pygame.sprite.Sprite):
         first = True
 
         #Initial y-coordinate for first line of text
-        y = self._y + 130
+        y = self._y + 135
 
         #Loop prints each line of text from self._description list
         for line in self._description:
