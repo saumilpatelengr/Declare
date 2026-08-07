@@ -20,7 +20,7 @@ pygame.init()
 SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 GAME_SCREEN = pygame.Surface((c.VIRTUAL_WIDTH, c.VIRTUAL_HEIGHT))
 pygame.display.set_caption("Declare")
-pygame.display.set_icon(pygame.image.load(resource_path(os.path.join('assets', 'images', 'demo', 'icon.png'))))
+pygame.display.set_icon(pygame.image.load(resource_path(os.path.join('assets', 'images', 'other', 'icon.png'))))
 
 
 
