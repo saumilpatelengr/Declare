@@ -8,7 +8,7 @@ Declare is a fast-paced card game designed for 2 players, utilizing a standard 5
 
 
 ## 🎥 Gameplay Demo
-![Gameplay](/assets/images/demo/demo.gif)
+![Gameplay](/demo/demo.gif)
 
 
 
@@ -102,6 +102,7 @@ Coming Soon!
 |   ├── pixil           #Contains .pixil files used to create .png assets for cards and UI
 |   └── psd             #Contains .psd files used to create .png assets for the Steam Store Page
 └── src                 #Main game source code
+└── demo                #Contains Steam and demonstration assets
 ```
 
 
