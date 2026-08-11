@@ -3,6 +3,7 @@
 import os
 import sys
 import json
+import getpass
 
 
 
@@ -13,6 +14,9 @@ def get_save_path():
         base = os.path.expanduser("~/Library/Application Support/Declare")
     else:
         base = os.path.join(os.path.expanduser("~"), ".declare")
+
+    #Separates saves by OS user account
+    base = os.path.join(base, getpass.getuser())
 
     #Creates a folder if it does not already exist
     os.makedirs(base, exist_ok = True)
@@ -62,4 +66,6 @@ def reset_stats():
     data = load_save()
     for key in data:
         if key != 'sound' and key != 'music':
-            write_value(key, 0)
+            data[key] = 0
+    with open(get_save_path(), "w") as f:
+        json.dump(data, f)
