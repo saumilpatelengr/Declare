@@ -12,6 +12,16 @@ Declare is a fast-paced card game designed for 2 players, utilizing a standard 5
 
 
 
+* **Bluff, Count, and Declare** — Track your opponent's hand, weigh the odds, and decide the exact moment to call declare before they beat you to it
+* **High-Stakes Push-Your-Luck Scoring** — Get greedy and misjudge your declare, and you'll eat the penalty — bad reads can cost you the whole round
+* **Smart AI Opponent** — Play against a computer that reacts to the discard pile, your visible plays, and its own hand value to make calculated moves
+* **Multiple Game Modes** — Different modifiers change the rules just enough to keep every session feeling different
+* **Persistent High Scores & Stats** — Track your performance across sessions and chase your best run
+* **Handcrafted Pixel Art & Sound** — Original pixel art alongside a full audio/music package built for a cozy but tense card-table feel
+* **Cross-Platform** — Play on Windows or macOS with smooth, responsive controls built for mouse-only gameplay
+
+
+
 ## 🕹️ Gameplay Overview
 ### Goal of the Game
 The goal of the game is to have the computer have the highest amount of points before you receive 
