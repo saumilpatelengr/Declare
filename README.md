@@ -3,7 +3,7 @@
 
 
 ## 📝 Description
-Declare is a fast-paced card game designed for 2 players, utilizing a standard 52-card deck. Using strategy, probability, and deception, the goal of the game is to have your opponent have the highest amount of points before you receive more than or equal to 100 points.
+Declare is a fast-paced card game designed for 2 players, utilizing a standard 52-card deck. Using strategy, probability, and deception, the goal of the game is to have the computer have the highest amount of points before you receive more than or equal to 100 points.
 
 
 
@@ -14,10 +14,10 @@ Declare is a fast-paced card game designed for 2 players, utilizing a standard 5
 
 ## 🕹️ Gameplay Overview
 ### Goal of the Game
-The goal of the game is to have the opponent have the highest amount of points before you receive 
+The goal of the game is to have the computer have the highest amount of points before you receive 
 more than or equal to 100 points. To achieve this, you have to have the least number of points in your 
 hand when a player declares each round. If you receive more than or equal to 100 points across any 
-number of rounds, the game is over and the opponent’s total score will be your score for that game. 
+number of rounds, the game is over and the computer’s total score will be your score for that game. 
 A game is played until you receive more than or equal to 100 points.
 
 ### Contents and Setup
@@ -110,7 +110,7 @@ Coming Soon!
 ## ⚙️ Game Mechanics
 * Cards are represented as Card objects and managed in Python lists as a deck, a discard pile, and hands of cards
 * The game runs in a turn-based loop where the user can select cards to drop, draw a card from the deck, pick up a card from the discard pile, or declare their hand through the UI
-* The AI opponent makes decisions based on how many points it has in its hand, the top card of the discard pile, and which combination of cards yields the highest total value when dropped
+* The AI computer makes decisions based on how many points it has in its hand, the top card of the discard pile, and which combination of cards yields the highest total value when dropped
 * Each round is represented as a Game object and when a new round starts, a new Game object is created
 * After someone declares, points are determined by comparing total hand values and seeing if someone broke an attempt or not
 * The game's state is continuously updated through a central game loop handling input, logic, and rendering
