@@ -94,11 +94,11 @@ This game is played entirely with the mouse.
 
 
 ## 🚀 Running from Source / Download
-This repository is provided for portfolio purposes only. See the LICENSE file for details. To play the game, please download or purchase the official release using the link below.
+This repository is provided for portfolio purposes only. See the LICENSE file for details. To play the game, please purchase the official release using the link below.
 
 Download the latest version here:
 
-Coming Soon!
+https://store.steampowered.com/app/5043830/Declare/
 
 
 
