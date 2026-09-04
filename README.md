@@ -141,6 +141,13 @@ Built-in Python libraries:
 
 
 
+## 🧑‍💻 Development Note
+Declare was developed primarily without generative AI assistance. I intentionally built the core systems myself—including the card and game-state architecture, opponent AI, scoring logic, UI, and persistence system—to develop a deeper understanding of the game's underlying systems.
+
+Generative AI was not used as a substitute for designing or implementing the core gameplay systems. The project is primarily the result of my own design, programming, debugging, and iteration.
+
+
+
 ## 🤝 Contributing
 This is a personal portfolio project maintained solely by the author. I am not accepting external contributions, pull requests, or issues.
 
