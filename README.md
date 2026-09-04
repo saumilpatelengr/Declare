@@ -3,7 +3,7 @@
 
 
 ## 📝 Description
-Declare is a fast-paced card game designed for 2 players, utilizing a standard 52-card deck. Using strategy, probability, and deception, the goal of the game is to have the computer have the highest amount of points before you receive more than or equal to 100 points.
+Declare is a fast-paced single-player card game where you face off against an AI opponent, using a standard 52-card deck. Using strategy, probability, and deception, the goal of the game is to have the computer have the highest amount of points before you receive more than or equal to 100 points.
 
 
 
